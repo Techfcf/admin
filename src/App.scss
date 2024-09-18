@@ -1,0 +1,46 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Montserrat, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: aliceblue;
+}
+
+body {
+  scrollbar-width: thin; /* For Firefox */
+  overflow-y: scroll; /* To always show a scrollbar even if the content doesn't overflow */
+}
+
+body::-webkit-scrollbar {
+  width: 0.5rem; /* Set a small width for the scrollbar */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Make the thumb transparent to hide it */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent; /* Make the track transparent to hide it */
+}
+
+#root{
+  width: 100%;
+  padding-top: 80px;
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: #7ba23e;
+  border-radius: 20px;
+  font-size: large;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  #root{
+    padding-top: 70px;
+  }
+}
