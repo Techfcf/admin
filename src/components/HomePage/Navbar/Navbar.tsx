@@ -13,19 +13,17 @@ const Navbar = () => {
   return (
     <div className='navbar'>
       <div className="navbar_left">
-        <p className='navbar_left_text'><Link className='link' to='/'><img src="\assets\new_logo.png" 
-      alt="" 
-      width={110}
-      height={60}
-      className="d-inline-block align-text-top"/></Link></p>
+      <a className="navbar-brand" href="https://fitclimate.com/">
+          <img src="./assets/new_logo.png" alt="" width="120" height="80" className="d-inline-block align-text-top" />
+      </a>
       </div>
       <div className="navbar_right">
         <div className='right_group'>
-          <p><Link className='link' to='/'>Home</Link></p>
-          <p><Link className='link' to='/createimpact'>Create Impact</Link></p>
-          <p><Link className='link' to='/about'>About Us</Link></p>
-          <p><Link className='link' to='/contact'>Contact Us</Link></p>
-          <p><Link className='link' to='/Logout'>Logout</Link></p>
+        <a className="nav-link active" aria-current="page" href="https://fitclimate.com/">Home</a>
+        <a className="nav-link" href="https://fitclimate.com/map/">Create Impact</a>
+        <a className="nav-link" href="https://fitclimate.com/#about_us">About Us</a>
+        <a className="nav-link" href="https://fitclimate.com/#contact_us" tabIndex={-1} aria-disabled="true">Contact Us</a>
+        <a className="nav-link" href="https://fitclimate.com/logout/" tabIndex={-1} aria-disabled="true">Logout</a>
         </div>
       </div>
       <div className="navbar_right_mobile">
@@ -38,7 +36,6 @@ const Navbar = () => {
             <p><Link className='link' to='/createimpact'>Create Impact</Link></p>
             <p><Link className='link' to='/about'>About us</Link></p>
             <p><Link className='link' to='/contact'>Contact us</Link></p>
-            <p><Link className='link' to='/Logout'>Logout</Link></p>
           </div>
         }
         {!isDropdownOpen &&
@@ -47,7 +44,6 @@ const Navbar = () => {
             <p><Link className='link' to='/createimpact'>Create Impact</Link></p>
             <p><Link className='link' to='/about'>About us</Link></p>
             <p><Link className='link' to='/contact'>Contact us</Link></p>
-            <p><Link className='link' to='/Logout'>Logout</Link></p>
           </div>
         }
       </div>

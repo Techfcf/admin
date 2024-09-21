@@ -1,111 +1,170 @@
 import React from 'react';
 
-const MapComponent: React.FC = () => {
-  const showLegend = () => {
-    // Define the function to show legend
+const DataVisualization: React.FC = () => {
+  const fetchData = (type: string, element: HTMLSelectElement) => {
+    // Fetch data based on the selected sector or project
+  };
+
+  const processSelection = (event: React.MouseEvent<HTMLButtonElement>, selectionType: string) => {
+    // Handle the tab selection logic
+  };
+
+  const clearMap = () => {
+    // Logic to clear the map
   };
 
   return (
-    <div className="map-div height_fix leaflet-container leaflet-fade-anim leaflet-grab leaflet-touch-drag" id="map-div" tabIndex={0} style={{ position: 'relative', outline: 'none' }}>
-      {/* Legend Button */}
-      <button type="button" className="btn btn-info" id="legendButton" onClick={showLegend}>
-        Legend &nbsp;
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle" viewBox="0 0 16 16">
-          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-        </svg>
-      </button>
-      {/* Legend DIV */}
-      <div id="myDIV">
-        <img src="/static/ndvi.png" height="90" alt="NDVI Legend" />
-      </div>
-      <div className="leaflet-pane leaflet-map-pane" style={{ transform: 'translate3d(-198px, -19px, 0px)' }}>
-        <div className="leaflet-pane leaflet-tile-pane">
-          <div className="leaflet-layer" style={{ zIndex: 1, opacity: 1 }}>
-            <div className="leaflet-tile-container leaflet-zoom-animated" style={{ zIndex: 19, transform: 'translate3d(0px, 0px, 0px) scale(0.5)' }}></div>
-            <div className="leaflet-tile-container leaflet-zoom-animated" style={{ zIndex: 20, transform: 'translate3d(273px, 88px, 0px) scale(1)' }}>
-              <img alt="" role="presentation" src="http://mt1.google.com/vt/lyrs=s&amp;x=11&amp;y=6&amp;z=4" className="leaflet-tile leaflet-tile-loaded" style={{ width: '256px', height: '256px', transform: 'translate3d(100px, -70px, 0px)', opacity: 1 }} />
-              {/* Repeat for other tiles */}
+    <div className="col-md-3 col-sm-12" style={{ paddingRight: '0px', paddingLeft: '0px' }}>
+      <div className="form-div height_fix" style={{ background: 'linear-gradient(#5d5d5d, rgb(113, 135, 137))', color: 'white', padding: '0px' }}>
+        <div className="tab mb-2" style={{ padding: '10px', margin: '0px', borderRadius: '0px', backgroundColor: '#2F474F' }}>
+          <button className="tablinks2" style={{ width: '50%', borderRadius: '10px' }} onClick={(event) => processSelection(event, 'project')} id="project_desc_tab">
+            Project Description
+          </button>
+          <button className="tablinks2 active" style={{ width: '50%', borderRadius: '10px' }} onClick={(event) => processSelection(event, 'draw')} id="data_visual_tab">
+            Data Visualization
+          </button>
+        </div>
+
+        <div className="accordion" id="project_tab" style={{ overflow: 'hidden auto', color: 'white', height: '90%', display: 'none' }}>
+          <div className="row">
+            <div className="col-md-12">
+              <select id="sector_selector" className="form-select btn btn-primary mt-3" aria-label="Default select example" onChange={(e) => fetchData('projects', e.target)}>
+                <option selected>Select Sector Type</option>
+                <option value="1">Nature based Solutions (NbS)</option>
+                <option value="2">Community based Projects</option>
+              </select>
+
+              <select id="project_selector" className="form-select btn btn-primary mt-3" aria-label="Default select example" onChange={(e) => fetchData('project_details', e.target)}>
+                <option value="null">Select Projects</option>
+              </select>
+            </div>
+            <div className="col-md-12">
+              <div id="project_details_div" className="mt-5" style={{ border: '3px solid', borderRadius: '10px', fontSize: 'small', display: 'none' }}></div>
             </div>
           </div>
         </div>
-        {/* Other leaflet panes */}
-        <div className="leaflet-control-container">
-          <div className="leaflet-top leaflet-left">
-            <div className="leaflet-control-zoom leaflet-bar leaflet-control">
-              <a className="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
-              <a className="leaflet-control-zoom-out leaflet-disabled" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a>
-            </div>
-            <div className="leaflet-draw leaflet-control">
-              <div className="leaflet-draw-section">
-                <div className="leaflet-draw-toolbar leaflet-bar leaflet-draw-toolbar-top">
-                  <a className="leaflet-draw-draw-polygon" href="#" title="Draw a polygon">
-                    <span className="sr-only">Draw a polygon</span>
-                  </a>
-                  <a className="leaflet-draw-draw-rectangle" href="#" title="Draw a rectangle">
-                    <span className="sr-only">Draw a rectangle</span>
-                  </a>
+
+        <div className="accordion" id="accordionExample" style={{ overflow: 'hidden auto', display: 'block', height: '86%', background: 'linear-gradient(rgb(93, 93, 93), rgb(113, 135, 137))', color: 'white' }}>
+          {/* First Accordion/Step */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingOne">
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <h5>1. Area of Interest</h5>
+              </button>
+            </h2>
+            <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                Provide an Area of Interest (AOI).
+                <div className="tab" style={{ borderRadius: '20px', padding: '10px' }}>
+                  <button className="tablinks1" style={{ width: '50%', borderRadius: '20px' }} onClick={(event) => processSelection(event, 'drawAOI')} id="defaultOpen">
+                    Draw AOI
+                  </button>
+                  <button className="tablinks1 active" style={{ width: '50%', borderRadius: '20px' }} onClick={(event) => processSelection(event, 'uploadAOI')}>
+                    Upload AOI
+                  </button>
                 </div>
-                <ul className="leaflet-draw-actions"></ul>
+
+                <div id="uploadAOI" className="tabcontent" style={{ display: 'block' }}>
+                  <form action="/analytics/uploadShp" id="uploadAOIForm" encType="multipart/form-data" method="POST">
+                    Upload File:<br />
+                    Supported File Formats are:
+                    <ul>
+                      <li>GeoJSON</li>
+                      <li>KML</li>
+                      <li>ESRI Shapefile in Zipped Format</li>
+                    </ul>
+                    <input type="file" name="shape" id="shape" accept=".zip,.geojson,.kml" autoComplete="off" /><br />
+                  </form>
+                </div>
+
+                <div id="drawAOI" className="tabcontent" style={{ display: 'none' }}>
+                  <form action="/analytics/uploadPolygon" id="drawAOIForm" method="POST">
+                    Draw polygon using tools from the map.<br />
+                    <input type="text" id="drawnPolygon" name="aoi" style={{ display: 'none' }} />
+                  </form>
+                </div>
+
+                <p className="alert" id="alert" style={{ color: 'black' }}></p>
               </div>
-              <div className="leaflet-draw-section">
-                <div className="leaflet-draw-toolbar leaflet-bar">
-                  <a className="leaflet-draw-edit-edit leaflet-disabled" href="#" title="No layers to edit">
-                    <span className="sr-only">Edit layers</span>
-                  </a>
-                  <a className="leaflet-draw-edit-remove leaflet-disabled" href="#" title="No layers to delete">
-                    <span className="sr-only">Delete layers</span>
-                  </a>
-                </div>
-                <ul className="leaflet-draw-actions"></ul>
+            </div>
+          </div>
+
+          {/* Second Accordion/Step */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingTwo">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <h5>2. Satellite/Sensor Selection</h5>
+              </button>
+            </h2>
+            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div className="accordion-body fix-height-collapse">
+                <h5 className="form-title">Select Dataset</h5>
+                <form method="post" className="fix-form-height" action="/get-image-collection" id="form-prds">
+                  <label htmlFor="id_platforms">Platforms:</label>
+                  <select name="platforms" className="form-control" id="id_platforms">
+                    <option value="sentinel">Sentinel</option>
+                  </select>
+
+                  <label htmlFor="id_sensors">Sensors:</label>
+                  <select name="sensors" className="form-control" id="id_sensors">
+                    <option value="2">2</option>
+                  </select>
+
+                  <label htmlFor="id_products">Products:</label>
+                  <select name="products" className="form-control" id="id_products">
+                    <option value="surface">Sentinel-2 MSI</option>
+                  </select>
+
+                  <label htmlFor="id_reducer">Reducer:</label>
+                  <select name="reducer" className="form-control" id="id_reducer">
+                    <option value="mosaic">mosaic</option>
+                    <option value="median">median</option>
+                    <option value="mode">mode</option>
+                    <option value="mean">mean</option>
+                    <option value="min">min</option>
+                    <option value="max">max</option>
+                    <option value="sum">sum</option>
+                    <option value="count">count</option>
+                    <option value="product">product</option>
+                  </select>
+
+                  <br />
+                  <label htmlFor="id_start_date">Start date:</label>
+                  <input className="form-control" type="date" name="start_date" required id="id_start_date" min="2000-02-24" max="2024-09-21" /><br />
+                  <label htmlFor="id_end_date">End date:</label>
+                  <input className="form-control" type="date" name="end_date" required id="id_end_date" min="2000-02-24" max="2024-09-21" /><br />
+                  <input type="submit" name="submit" className="btn btn-primary" id="load_map" value="Load Results" />
+                </form>
               </div>
             </div>
           </div>
-          <div className="leaflet-top leaflet-right">
-            <div className="leaflet-control-layers leaflet-control-layers-expanded leaflet-control" aria-haspopup="true">
-              <a className="leaflet-control-layers-toggle" href="#" title="Layers"></a>
-              <section className="leaflet-control-layers-list">
-                <div className="leaflet-control-layers-base">
-                  <label>
-                    <div>
-                      <input type="radio" className="leaflet-control-layers-selector" name="leaflet-base-layers_63" checked />
-                      <span> Google Satellite</span>
-                    </div>
-                  </label>
-                  <label>
-                    <div>
-                      <input type="radio" className="leaflet-control-layers-selector" name="leaflet-base-layers_63" />
-                      <span> Open StreetMap</span>
-                    </div>
-                  </label>
-                </div>
-                <div className="leaflet-control-layers-separator"></div>
-                <div className="leaflet-control-layers-overlays">
-                  <label>
-                    <div>
-                      <input type="checkbox" className="leaflet-control-layers-selector" defaultChecked />
-                      <span> AOI</span>
-                    </div>
-                  </label>
-                  <label>
-                    <div>
-                      <input type="checkbox" className="leaflet-control-layers-selector" />
-                      <span> VIIRS Suomi NPP 24hrs fires/hotspots</span>
-                    </div>
-                  </label>
-                </div>
-              </section>
-            </div>
-          </div>
-          <div className="leaflet-bottom leaflet-left">
-            <div className="leaflet-control-scale leaflet-control">
-              <div className="leaflet-control-scale-line" style={{ width: '55px' }}>500 km</div>
-              <div className="leaflet-control-scale-line" style={{ width: '89px' }}>500 mi</div>
-            </div>
-          </div>
-          <div className="leaflet-bottom leaflet-right">
-            <div className="leaflet-control-attribution leaflet-control">
-              <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>
+
+          {/* Third Accordion/Step */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingThree">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <h5>3. Algorithm Selection</h5>
+              </button>
+            </h2>
+            <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <form method="post" action="/get-result" id="form-result">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="your_csrf_token_here" />
+                  <input className="form-control" type="text" id="uploaded_geometry" required name="uploaded_geometry" style={{ display: 'none' }} />
+                  <div id="algorithm">
+                    <label htmlFor="glacierProcess">Select an algorithm:</label>
+                    <select className="form-control" id="glacierProcess" name="glacierProcess" form="form-result">
+                      <option value="">-- Select Algorithm --</option>
+                      <option value="NDVI">NDVI</option>
+                    </select>
+                  </div>
+                  <br />
+                  <input type="submit" name="submit" className="btn btn-primary" id="load_result" value="Compute" disabled style={{ background: 'radial-gradient(939px at 94.7% 50%, #5590a3 0%, rgb(163, 223, 220) 76.9%)' }} />
+                </form>
+                <button id="clear_map" className="btn" onClick={clearMap}>
+                  Clear Results
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -114,4 +173,4 @@ const MapComponent: React.FC = () => {
   );
 };
 
-export default MapComponent;
+export default DataVisualization;

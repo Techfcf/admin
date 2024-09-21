@@ -1,0 +1,61 @@
+.form-div {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(#5d5d5d, rgb(113, 135, 137));
+  color: white;
+  padding: 0;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.left-section {
+  flex: 1;
+  margin-right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.right-section {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.map-container {
+  margin-top: 20px;
+}
+
+.map {
+  height: 500px;
+  width: 100%;
+  border: 1px solid #ccc;
+}
+
+.accordion {
+  margin-bottom: 20px;
+}
+
+.accordion-button {
+  background-color: #4bb9b4;
+  color: white;
+}
+
+.accordion-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.accordion-body {
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.btn {
+  margin-top: 10px;
+  background: radial-gradient(circle, #5590a3 0%, rgb(163, 223, 220) 76.9%);
+}
