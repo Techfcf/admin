@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
+import { Loader} from '@googlemaps/js-api-loader';
 import * as toGeoJSON from '@tmcw/togeojson';
 import './Home.scss';
 const ProjectDescription: React.FC<{ onTabSelect: (tab: string) => void }> = ({ onTabSelect }) => {
@@ -59,7 +59,7 @@ const AlgorithmSelection: React.FC = () => {
 
 const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const setDrawingManager= useState<google.maps.drawing.DrawingManager | null>(null);
+  const [drawingManager , setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -85,7 +85,7 @@ const MapComponent: React.FC = () => {
         drawingControl: true,
         drawingControlOptions: {
           position: googleMaps.ControlPosition.TOP_LEFT,
-          drawingModes: ['polygon', 'rectangle'],
+          
         },
         polygonOptions: {
           editable: true,
@@ -100,18 +100,18 @@ const MapComponent: React.FC = () => {
       // Set up the Drawing Manager on the map
       drawingManagerInstance.setMap(mapInstance);
 
-      // Set the map and drawing manager state
-      setMap(mapInstance);
-      setDrawingManager(drawingManagerInstance);
+      drawingManagerInstance.setMap(mapInstance);
+      setDrawingManager(drawingManagerInstance); // This line is correct
 
-      // Add event listeners for drawing completion
-      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event) => {
+      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event: google.maps.drawing.OverlayCompleteEvent) => {
         if (shapes) {
           shapes.setMap(null);
         }
-        setShapes(event.overlay);
+        setShapes(event.overlay as google.maps.Polygon | google.maps.Rectangle);
         drawingManagerInstance.setDrawingMode(null);
       });
+  
+      setMap(mapInstance);
     });
   }, [shapes]);
 
