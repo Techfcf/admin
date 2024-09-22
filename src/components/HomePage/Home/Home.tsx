@@ -16,21 +16,7 @@ const ProjectDescription: React.FC<{ onTabSelect: (tab: string) => void }> = ({ 
   );
 };
 
-const SectorSelector: React.FC<{ onSectorChange: (event: React.ChangeEvent<HTMLSelectElement>) => void }> = ({ onSectorChange }) => {
-  return (
-    <select
-      id="sector_selector"
-      className="form-select btn btn-primary mt-3"
-      aria-label="Default select example"
-      onChange={onSectorChange}
-      style={{ width: '100%', background: '#4bb9b4', height: '50px' }}
-    >
-      <option selected>Select Sector Type</option>
-      <option value="1">Nature based Solutions (NbS)</option>
-      <option value="2">Community based Projects</option>
-    </select>
-  );
-};
+
 
 const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ onTabChange }) => {
   return (
@@ -54,7 +40,7 @@ const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ on
 };
 const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const setDrawingManager= useState<google.maps.drawing.DrawingManager | null>(null);
+  const [drawingManager, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -100,11 +86,21 @@ const MapComponent: React.FC = () => {
       setDrawingManager(drawingManagerInstance);
 
       // Add event listeners for drawing completion
-      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event) => {
+      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event: google.maps.drawing.OverlayCompleteEvent) => {
         if (shapes) {
           shapes.setMap(null);
         }
-        setShapes(event.overlay);
+      
+        const overlay = event.overlay;
+      
+        // Check if the overlay is a Polygon or Rectangle
+        if (overlay instanceof google.maps.Polygon || overlay instanceof google.maps.Rectangle) {
+          setShapes(overlay);
+        } else {
+          // Optionally handle other types or ignore
+          console.warn('Unsupported shape type:', overlay);
+        }
+      
         drawingManagerInstance.setDrawingMode(null);
       });
     });
@@ -159,7 +155,7 @@ const MapComponent: React.FC = () => {
     const zip = new JSZip();
     const content = await zip.loadAsync(file);
   
-    content.forEach(async (relativePath, zipEntry) => {
+    content.forEach(async (_relativePath, zipEntry) => {
       if (zipEntry.name.endsWith('.kml')) {
         const kmlText = await zipEntry.async('string');
         const parser = new DOMParser();
