@@ -213,7 +213,7 @@ const MapComponent: React.FC = () => {
       map.fitBounds(bounds);
     }
   };
-  const processPoints = (
+  /*const processPoints = (
     geometry: google.maps.Data.Geometry | null,
     callback: (latLng: google.maps.LatLng) => void,
     thisArg: google.maps.LatLngBounds
@@ -234,7 +234,32 @@ const MapComponent: React.FC = () => {
     } else if (geometry instanceof google.maps.Data.MultiPoint) {
       geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
     }
+  };*/
+
+  const processPoints = (
+    geometry: google.maps.Data.Geometry | null,
+    callback: (latLng: google.maps.LatLng) => void,
+    thisArg: google.maps.LatLngBounds
+  ) => {
+    if (!geometry) return;
+  
+    // Handle different geometry types by checking their instance type
+    if (geometry instanceof google.maps.LatLng) {
+      callback.call(thisArg, geometry as google.maps.LatLng); // Type assertion
+    } else if (geometry instanceof google.maps.Data.Point) {
+      callback.call(thisArg, geometry.get() as google.maps.LatLng); // Type assertion
+    } else if (geometry instanceof google.maps.Data.LineString || geometry instanceof google.maps.Data.LinearRing) {
+      geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
+    } else if (geometry instanceof google.maps.Data.Polygon || geometry instanceof google.maps.Data.MultiLineString) {
+      geometry.getArray().forEach((g) => {
+        g.getArray().forEach((point) => processPoints(point, callback, thisArg));
+      });
+    } else if (geometry instanceof google.maps.Data.MultiPoint) {
+      geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
+    }
   };
+  
+
   const deleteShape = () => {
     if (shapes) {
       shapes.setMap(null);
