@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader} from '@googlemaps/js-api-loader';
+import { Loader } from '@googlemaps/js-api-loader';
 import * as toGeoJSON from '@tmcw/togeojson';
+import JSZip from 'jszip';
 import './Home.scss';
 const ProjectDescription: React.FC<{ onTabSelect: (tab: string) => void }> = ({ onTabSelect }) => {
   return (
@@ -31,35 +32,29 @@ const SectorSelector: React.FC<{ onSectorChange: (event: React.ChangeEvent<HTMLS
   );
 };
 
-const ProjectSelection: React.FC = () => {
+const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ onTabChange }) => {
   return (
-    <select
-      id="project_selector"
-      className="form-select btn btn-primary mt-3"
-      aria-label="Default select example"
-      style={{ width: '100%', background: '#4bb9b4', height: '50px' }}
-    >
-      <option value="null">Select Projects</option>
-    </select>
+    <div className="tab" style={{ borderRadius: '20px', padding: '10px' }}>
+      <button
+        className="tablinks1"
+        style={{ width: '50%', borderRadius: '20px' }}
+        onClick={() => onTabChange('drawAOI')}
+      >
+        Draw AOI
+      </button>
+      <button
+        className="tablinks1 active"
+        style={{ width: '50%', borderRadius: '20px' }}
+        onClick={() => onTabChange('uploadAOI')}
+      >
+        Upload AOI
+      </button>
+    </div>
   );
 };
-
-const AlgorithmSelection: React.FC = () => {
-  return (
-    <form method="post" action="/get-result" id="form-result">
-      <label htmlFor="glacierProcess">Select an algorithm:</label>
-      <select className="form-control" id="glacierProcess" name="glacierProcess">
-        <option value="">-- Select Algorithm --</option>
-        <option value="NDVI">NDVI</option>
-      </select>
-      <input type="submit" name="submit" className="btn btn-primary" id="load_result" value="Compute" disabled style={{ background: 'radial-gradient(939px at 94.7% 50%, #5590a3 0%, rgb(163, 223, 220) 76.9%) !important' }} />
-    </form>
-  );
-};
-
 const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [drawingManager , setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
+  const setDrawingManager= useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -85,7 +80,7 @@ const MapComponent: React.FC = () => {
         drawingControl: true,
         drawingControlOptions: {
           position: googleMaps.ControlPosition.TOP_LEFT,
-          
+    
         },
         polygonOptions: {
           editable: true,
@@ -100,53 +95,132 @@ const MapComponent: React.FC = () => {
       // Set up the Drawing Manager on the map
       drawingManagerInstance.setMap(mapInstance);
 
-      drawingManagerInstance.setMap(mapInstance);
-      setDrawingManager(drawingManagerInstance); // This line is correct
+      // Set the map and drawing manager state
+      setMap(mapInstance);
+      setDrawingManager(drawingManagerInstance);
 
-      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event: google.maps.drawing.OverlayCompleteEvent) => {
+      // Add event listeners for drawing completion
+      googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event) => {
         if (shapes) {
           shapes.setMap(null);
         }
-        setShapes(event.overlay as google.maps.Polygon | google.maps.Rectangle);
+        setShapes(event.overlay);
         drawingManagerInstance.setDrawingMode(null);
       });
-  
-      setMap(mapInstance);
     });
   }, [shapes]);
 
-  const handleFileSubmit = () => {
+  const handleFileSubmit = async () => {
     const file = fileInputRef.current?.files?.[0];
-    if (file && file.name.endsWith('.kml')) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const kmlText = e.target?.result as string;
+  
+    if (!file) {
+      alert('Please upload a file.');
+      return;
+    }
+  
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  
+    if (fileExtension === 'kml') {
+      handleKMLFile(file);
+    } else if (fileExtension === 'geojson') {
+      handleGeoJSONFile(file);
+    } else if (fileExtension === 'zip') {
+      handleZipFile(file);
+    } else {
+      alert('Unsupported file format. Please upload a KML, GeoJSON, or ZIP file.');
+    }
+  };
+  
+  const handleKMLFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const kmlText = e.target?.result as string;
+      const parser = new DOMParser();
+      const kmlDom = parser.parseFromString(kmlText, 'application/xml');
+      const geoJsonData = toGeoJSON.kml(kmlDom);
+  
+      addDataToMap(geoJsonData);
+    };
+    reader.readAsText(file);
+  };
+  
+  const handleGeoJSONFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const geoJsonText = e.target?.result as string;
+      const geoJsonData = JSON.parse(geoJsonText);
+  
+      addDataToMap(geoJsonData);
+    };
+    reader.readAsText(file);
+  };
+  
+  const handleZipFile = async (file: File) => {
+    const zip = new JSZip();
+    const content = await zip.loadAsync(file);
+  
+    content.forEach(async (relativePath, zipEntry) => {
+      if (zipEntry.name.endsWith('.kml')) {
+        const kmlText = await zipEntry.async('string');
         const parser = new DOMParser();
         const kmlDom = parser.parseFromString(kmlText, 'application/xml');
         const geoJsonData = toGeoJSON.kml(kmlDom);
-
-        if (map) {
-          map.data.addGeoJson(geoJsonData);
-          const bounds = new google.maps.LatLngBounds();
-          map.data.forEach((feature) => {
-            processPoints(feature.getGeometry(), bounds.extend, bounds);
-          });
-          map.fitBounds(bounds);
+  
+        addDataToMap(geoJsonData);
+      } else if (zipEntry.name.endsWith('.geojson')) {
+        const geoJsonText = await zipEntry.async('string');
+        const geoJsonData = JSON.parse(geoJsonText);
+  
+        addDataToMap(geoJsonData);
+      }
+    });
+  };
+  
+  const addDataToMap = (geoJsonData: any) => {
+    if (map) {
+      map.data.addGeoJson(geoJsonData);
+      const bounds = new google.maps.LatLngBounds();
+  
+      geoJsonData.features.forEach((feature: any) => {
+        const geometry = feature.geometry;
+  
+        if (geometry) {
+          if (geometry.type === 'Point') {
+            const [lng, lat] = geometry.coordinates;
+            bounds.extend(new google.maps.LatLng(lat, lng));
+          } else if (geometry.type === 'LineString' || geometry.type === 'MultiPoint') {
+            geometry.coordinates.forEach(([lng, lat]: [number, number]) => {
+              bounds.extend(new google.maps.LatLng(lat, lng));
+            });
+          } else if (geometry.type === 'Polygon' || geometry.type === 'MultiLineString') {
+            geometry.coordinates.forEach((path: [number, number][]) => {
+              path.forEach(([lng, lat]) => {
+                bounds.extend(new google.maps.LatLng(lat, lng));
+              });
+            });
+          } else if (geometry.type === 'MultiPolygon') {
+            geometry.coordinates.forEach((polygon: [number, number][][]) => {
+              polygon.forEach((path) => {
+                path.forEach(([lng, lat]) => {
+                  bounds.extend(new google.maps.LatLng(lat, lng));
+                });
+              });
+            });
+          }
         }
-      };
-      reader.readAsText(file);
-    } else {
-      alert('Please upload a valid KML file.');
+      });
+  
+      map.fitBounds(bounds);
     }
   };
-
   const processPoints = (
     geometry: google.maps.Data.Geometry | null,
     callback: (latLng: google.maps.LatLng) => void,
     thisArg: google.maps.LatLngBounds
   ) => {
     if (!geometry) return;
-
+  
+    // Handle different geometry types by checking their instance type
     if (geometry instanceof google.maps.LatLng) {
       callback.call(thisArg, geometry);
     } else if (geometry instanceof google.maps.Data.Point) {
@@ -154,12 +228,13 @@ const MapComponent: React.FC = () => {
     } else if (geometry instanceof google.maps.Data.LineString || geometry instanceof google.maps.Data.LinearRing) {
       geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
     } else if (geometry instanceof google.maps.Data.Polygon || geometry instanceof google.maps.Data.MultiLineString) {
-      geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
+      geometry.getArray().forEach((g) => {
+        g.getArray().forEach((point) => processPoints(point, callback, thisArg));
+      });
     } else if (geometry instanceof google.maps.Data.MultiPoint) {
       geometry.getArray().forEach((g) => processPoints(g, callback, thisArg));
     }
   };
-
   const deleteShape = () => {
     if (shapes) {
       shapes.setMap(null);
@@ -169,9 +244,19 @@ const MapComponent: React.FC = () => {
 
   return (
     <div>
-      
-      <input type="file" ref={fileInputRef} accept=".kml" />
-      <button onClick={handleFileSubmit}>Upload KML</button>
+      <div id="uploadAOI" className="tabcontent" style={{ display: 'block' }}>
+        <form action="/analytics/uploadShp" id="uploadAOIForm" encType="multipart/form-data" method="POST">
+          Upload File:<br />
+          Supported File Formats are:
+          <ul>
+            <li>GeoJSON</li>
+            <li>KML</li>
+            <li>ESRI Shapefile in Zipped Format</li>
+          </ul>
+        </form>
+      </div>
+      <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
+      <button onClick={handleFileSubmit}>Upload File</button>
       <button onClick={deleteShape} style={{ marginLeft: '20px' }}>Delete Last Shape</button>
       <div id="map" style={{ height: '500px', width: '100%' }}></div>
     </div>
@@ -179,58 +264,30 @@ const MapComponent: React.FC = () => {
 };
 
 const MainComponent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('draw');
+  const [activeTab, setActiveTab] = useState('drawAOI');
 
-  const handleTabSelect = (tab: string) => {
+  const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
 
   return (
     <div className="form-div height_fix" style={{ background: 'linear-gradient(#5d5d5d, rgb(113, 135, 137))', color: 'white', padding: '0px' }}>
-      <ProjectDescription onTabSelect={handleTabSelect} />
-      <div className="accordion" id="project_tab" style={{ overflow: 'hidden auto', color: 'white', height: '90%', display: activeTab === 'project' ? 'block' : 'none' }}>
-        <div className="row">
-          <div className="col-md-12">
-            <SectorSelector onSectorChange={(e) => console.log(e.target.value)} />
-            <ProjectSelection />
-          </div>
-        </div>
-      </div>
-
+      <ProjectDescription onTabSelect={handleTabChange} />
       <div className="accordion" id="accordionExample" style={{ overflow: 'hidden auto', display: 'block', height: '86%', background: 'linear-gradient(rgb(93, 93, 93), rgb(113, 135, 137))', color: 'white' }}>
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
             <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              <h5>1. Upload AOI</h5>
+              <h5>1. Area of Interest</h5>
             </button>
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              <MapComponent />
-            </div>
-          </div>
-        </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header" id="headingTwo">
-            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              <h5>2. Satellite/Sensor Selection</h5>
-            </button>
-          </h2>
-          <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            <div className="accordion-body">
-              {/* Add Satellite/Sensor selection form here */}
-            </div>
-          </div>
-        </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header" id="headingThree">
-            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              <h5>3. Algorithm Selection</h5>
-            </button>
-          </h2>
-          <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-            <div className="accordion-body">
-              <AlgorithmSelection />
+              <ProjectSelection onTabChange={handleTabChange} />
+              {activeTab === 'uploadAOI' && (
+                <div id="uploadAOI" className="tabcontent" style={{ display: 'block' }}>
+                  <MapComponent />
+                </div>
+              )}
             </div>
           </div>
         </div>
