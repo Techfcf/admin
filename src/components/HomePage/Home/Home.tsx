@@ -40,7 +40,7 @@ const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ on
 };
 const MapComponent: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [drawingManager, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
+  const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
