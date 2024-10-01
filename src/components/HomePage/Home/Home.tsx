@@ -8,7 +8,33 @@ interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
 
+<<<<<<< HEAD
 const MapComponent: React.FC<MapComponentProps> = ({ }) => {
+=======
+
+
+const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ onTabChange }) => {
+  return (
+    <div className="tab" style={{ borderRadius: '20px', padding: '10px' }}>
+      <button
+        className="tablinks1"
+        style={{ width: '50%', borderRadius: '20px' }}
+        onClick={() => onTabChange('drawAOI')}
+      >
+        Draw AOI
+      </button>
+      <button
+        className="tablinks1 active"
+        style={{ width: '50%', borderRadius: '20px' }}
+        onClick={() => onTabChange('uploadAOI')}
+      >
+        Upload AOI
+      </button>
+    </div>
+  );
+};
+const MapComponent: React.FC = () => {
+>>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
@@ -121,7 +147,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
   const handleZipFile = async (file: File) => {
     const zip = new JSZip();
     const content = await zip.loadAsync(file);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
     content.forEach(async (_relativePath, zipEntry) => {
       if (zipEntry.name.endsWith('.kml')) {
         const kmlText = await zipEntry.async('string');
@@ -177,6 +207,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
     }
   };
 
+<<<<<<< HEAD
   const calculateNDVI = async () => {
   if (!map) return;
 
@@ -255,6 +286,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
         row.push(isNaN(ndvi) ? 0 : ndvi); // Avoid NaN values
       }
       ndviArray.push(row);
+=======
+  const deleteShape = () => {
+    if (shapes) {
+      shapes.setMap(null);
+      setShapes(null);
+>>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
     }
   
     return ndviArray;
