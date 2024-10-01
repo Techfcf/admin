@@ -1,0 +1,17 @@
+h5 {
+    display: block;
+    font-size: 0.83em;
+    margin-block-start: 1.67em;
+    margin-block-end: 1.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+* {
+    box-sizing: border-box;
+}
+.accordion-body {
+    background-color: #3a3a3a;
+    color: white;
+}
