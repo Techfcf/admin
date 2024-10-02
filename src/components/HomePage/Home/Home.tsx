@@ -8,33 +8,7 @@ interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
 
-<<<<<<< HEAD
 const MapComponent: React.FC<MapComponentProps> = ({ }) => {
-=======
-
-
-const ProjectSelection: React.FC<{ onTabChange: (tab: string) => void }> = ({ onTabChange }) => {
-  return (
-    <div className="tab" style={{ borderRadius: '20px', padding: '10px' }}>
-      <button
-        className="tablinks1"
-        style={{ width: '50%', borderRadius: '20px' }}
-        onClick={() => onTabChange('drawAOI')}
-      >
-        Draw AOI
-      </button>
-      <button
-        className="tablinks1 active"
-        style={{ width: '50%', borderRadius: '20px' }}
-        onClick={() => onTabChange('uploadAOI')}
-      >
-        Upload AOI
-      </button>
-    </div>
-  );
-};
-const MapComponent: React.FC = () => {
->>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
@@ -147,11 +121,7 @@ const MapComponent: React.FC = () => {
   const handleZipFile = async (file: File) => {
     const zip = new JSZip();
     const content = await zip.loadAsync(file);
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
     content.forEach(async (_relativePath, zipEntry) => {
       if (zipEntry.name.endsWith('.kml')) {
         const kmlText = await zipEntry.async('string');
@@ -207,7 +177,6 @@ const MapComponent: React.FC = () => {
     }
   };
 
-<<<<<<< HEAD
   const calculateNDVI = async () => {
   if (!map) return;
 
@@ -240,7 +209,6 @@ const MapComponent: React.FC = () => {
 
     // Add NDVI layer to the map on top of the default satellite layer
     if (ndviLayer && map) {
-      map.overlayMapTypes.insertAt(0, ndviLayer); // Add NDVI layer as the first overlay
       console.log("NDVI layer added to the map.");
     }
   } catch (error) {
@@ -286,12 +254,6 @@ const MapComponent: React.FC = () => {
         row.push(isNaN(ndvi) ? 0 : ndvi); // Avoid NaN values
       }
       ndviArray.push(row);
-=======
-  const deleteShape = () => {
-    if (shapes) {
-      shapes.setMap(null);
-      setShapes(null);
->>>>>>> fdc6cb4a88d4300e468a5b0198a1b820260180a7
     }
   
     return ndviArray;
@@ -347,8 +309,8 @@ const MapComponent: React.FC = () => {
 };
 
 const MainComponent: React.FC = () => {
-  const [satelliteData, setSatelliteData] = useState(null); // State for satellite form data
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null); // State for AOI file upload
+  const [, setSatelliteData] = useState(null); // State for satellite form data
+  const [, setUploadedFile] = useState<File | null>(null); // State for AOI file upload
 
   // Handle Tab Change
 
@@ -364,21 +326,6 @@ const MainComponent: React.FC = () => {
     console.log('Uploaded AOI File:', file);
   };
 
-  const handleSubmit = () => {
-    if (!uploadedFile || !satelliteData) {
-      alert('Please complete both AOI upload and satellite sensor selection.');
-      return;
-    }
-
-    // Combine AOI file and satellite sensor data here for submission
-    const submissionData = {
-      uploadedFile,
-      satelliteData,
-    };
-
-    // Submit the combined data
-    console.log('Final Submission Data:', submissionData);
-  };
 
   return (
     <div className="form-div height_fix" style={{ background: 'linear-gradient(#5d5d5d, rgb(113, 135, 137))', color: 'white', padding: '0px' }}>
