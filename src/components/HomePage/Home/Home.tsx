@@ -212,6 +212,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
 <<<<<<< HEAD
       map.overlayMapTypes.insertAt(0,ndviLayer); // Add NDVI layer as the first overlay
 =======
+>>>>>>> 02326528aa5bce4085ece5f0b88d7f79d43447fd
       console.log("NDVI layer added to the map.");
     }
   } catch (error) {
