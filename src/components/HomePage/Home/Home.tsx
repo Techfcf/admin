@@ -7,6 +7,7 @@ import SatelliteSensorSelection from './SatelliteSensorSelection'; // Import the
 interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
+
 const MapComponent: React.FC<MapComponentProps> = ({ }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
@@ -208,7 +209,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
 
     // Add NDVI layer to the map on top of the default satellite layer
     if (ndviLayer && map) {
+<<<<<<< HEAD
       map.overlayMapTypes.insertAt(0,ndviLayer); // Add NDVI layer as the first overlay
+=======
       console.log("NDVI layer added to the map.");
     }
   } catch (error) {
