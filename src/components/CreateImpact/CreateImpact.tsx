@@ -29,7 +29,7 @@ const Login = () => {
         marginBottom: "0px",
         marginTop:"0px",
         marginLeft: "0px",
-        height: "80vh",
+        height: "85vh",
         backgroundBlendMode: "lighten"
       }}
     >
