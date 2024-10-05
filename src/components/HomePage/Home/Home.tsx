@@ -7,7 +7,6 @@ import SatelliteSensorSelection from './SatelliteSensorSelection'; // Import the
 interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
-
 const MapComponent: React.FC<MapComponentProps> = ({ }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
@@ -15,7 +14,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const loader = new Loader({
+    const loader = new Loader({ 
       apiKey: 'AIzaSyD_RsZX1HUnKShcqmWTz3COHmWWlQ0Gn_E', // Replace with your Google Maps API key
       version: 'weekly',
       libraries: ['drawing'],
@@ -209,10 +208,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
 
     // Add NDVI layer to the map on top of the default satellite layer
     if (ndviLayer && map) {
-<<<<<<< HEAD
       map.overlayMapTypes.insertAt(0,ndviLayer); // Add NDVI layer as the first overlay
-=======
->>>>>>> 02326528aa5bce4085ece5f0b88d7f79d43447fd
       console.log("NDVI layer added to the map.");
     }
   } catch (error) {
