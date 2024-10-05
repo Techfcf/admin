@@ -208,7 +208,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
 
     // Add NDVI layer to the map on top of the default satellite layer
     if (ndviLayer && map) {
-      map.overlayMapTypes.insertAt(0,ndviLayer); // Add NDVI layer as the first overlay
       console.log("NDVI layer added to the map.");
     }
   } catch (error) {
