@@ -4,21 +4,21 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 import 'leaflet-defaulticon-compatibility';
 import './satellite.scss';
-import L from 'leaflet';  // Import Leaflet for utility functions
+import L from 'leaflet';
+import NdviCalculator from './Ndvi_calculate'; // Import the new NDVI calculator component
 
 interface SatelliteSensorSelectionProps {
   onSubmit: (data: any) => void;
 }
 
-// Custom component to handle map fitting to GeoJSON bounds
 const FitBoundsToGeoJson: React.FC<{ geoJsonData: any }> = ({ geoJsonData }) => {
   const map = useMap();
 
   useEffect(() => {
     if (geoJsonData) {
-      const geoJsonLayer = L.geoJSON(geoJsonData);  // Create a Leaflet GeoJSON layer
-      const bounds = geoJsonLayer.getBounds();  // Get the bounds of the GeoJSON layer
-      map.fitBounds(bounds);  // Fit the map to the bounds
+      const geoJsonLayer = L.geoJSON(geoJsonData);
+      const bounds = geoJsonLayer.getBounds();
+      map.fitBounds(bounds);
     }
   }, [geoJsonData, map]);
 
@@ -36,6 +36,8 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
   });
 
   const [geoJsonData, setGeoJsonData] = useState<any | null>(null);
+  const [ndviData, setNdviData] = useState<any | null>(null);
+  const [isGeoJsonLoaded, setIsGeoJsonLoaded] = useState<boolean>(false); // Track if GeoJSON is loaded
 
   const loadGEE = () => {
     return new Promise<void>((resolve) => {
@@ -62,7 +64,7 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
           type: 'Feature',
           geometry: {
             type: 'Point',
-            coordinates: [73.8567, 26.9124], // Jodhpur, Rajasthan
+            coordinates: [73.8567, 26.9124],
           },
           properties: {
             name: 'Jodhpur, Rajasthan',
@@ -90,9 +92,12 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
     };
 
     setGeoJsonData(mockGeoJsonData);
-
-    // Optionally submit the form data
+    setIsGeoJsonLoaded(true); // Set to true when GeoJSON is loaded
     onSubmit(formData);
+  };
+
+  const handleNdviCalculated = (ndviData: any) => {
+    setNdviData(ndviData); // Set the calculated NDVI data
   };
 
   useEffect(() => {
@@ -187,6 +192,14 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
         </div>
       </div>
 
+      {/* Show NDVI Calculation Button after loading GeoJSON */}
+      
+
+      {/* NDVI Calculation */}
+      {geoJsonData && (
+        <NdviCalculator geoJsonData={geoJsonData} onNdviCalculated={handleNdviCalculated} />
+      )}
+
       {/* Map Section */}
       <div className="map-container">
         <h5>Map View</h5>
@@ -198,8 +211,25 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
           {geoJsonData && (
             <>
               <GeoJSON data={geoJsonData} />
-              <FitBoundsToGeoJson geoJsonData={geoJsonData} />  {/* Auto-zoom to fit the data */}
+              <FitBoundsToGeoJson geoJsonData={geoJsonData} />
             </>
+          )}
+          {ndviData && (
+            <GeoJSON 
+              data={ndviData} 
+              style={(feature) => {
+                if (!feature || !feature.properties) {
+                  return { color: 'gray', fillOpacity: 0 }; // Default style for undefined features
+                }
+
+                const ndviValue = feature.properties.ndvi;
+
+                return {
+                  color: ndviValue > 0 ? 'green' : 'red', // Color based on NDVI value
+                  fillOpacity: 0.5,
+                };
+              }} 
+            />
           )}
         </MapContainer>
       </div>
