@@ -301,7 +301,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
       </div>
       <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
       <button onClick={handleFileSubmit}>Upload File</button>
-      //<button onClick={calculateNDVI} style={{ marginLeft: '20px' }}>Calculate NDVI</button>
+      
       <div id="map" style={{ height: '500px', width: '100%' }}></div>
     </div>
   );
