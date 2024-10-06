@@ -30,27 +30,30 @@ const Login = () => {
       const response = await fetch('https://backend.fitclimate.com/auth/login', {
         method: 'POST',
         headers: {
+          'Accept': '*/*',
+          'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
           'Content-Type': 'application/json',
+          'Origin': 'https://fitclimate.com',
+          'Referer': 'https://fitclimate.com/',
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36',
         },
         body: JSON.stringify(payload),
-         mode: 'no-cors',
       });
 
-      const data = await response.json();
-
-      // Handle respons
+      // Check if the response is ok
       if (response.ok) {
-       
+        const data = await response.json();
         console.log('Logged in successfully', data);
         // Redirect to the external admin website
         window.location.href = 'https://admin.fitclimate.com/';
       } else {
-        // Display error from API response
+        // Handle API error
+        const data = await response.json();
         setError(data.message || 'Invalid login credentials');
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('An error occurred while logging in. Please try again later.');
+      setError('Please check your user credentials.');
     } finally {
       setLoading(false);
     }
@@ -62,9 +65,6 @@ const Login = () => {
       style={{
         background: "url('/assets/school2.png') no-repeat center center",
         backgroundSize: "cover",
-        marginBottom: "0px",
-        marginTop: "0px",
-        marginLeft: "0px",
         height: "85vh",
         backgroundBlendMode: "lighten",
       }}
