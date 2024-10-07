@@ -193,8 +193,8 @@ const MapComponent: React.FC<MapComponentProps> = ({}) => {
               headers: {
                   'Accept': '*/*',
                   'Content-Type': 'application/json',
-                  'Origin': 'https://fitclimate.com',
-                  'Referer': 'https://fitclimate.com/',
+                  'Origin': 'https://admin.fitclimate.com',
+                  'Referer': 'https://admin.fitclimate.com',
               },
               body: JSON.stringify({
                   area: predefinedCoordinates,  // Use the predefined coordinates
