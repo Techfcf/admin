@@ -69,7 +69,7 @@ const OrthoMosaicImage: React.FC = () => {
         return;
       }
 
-      const result = await response.statusText;
+      const result = await response.json();
       setTreeCount(result.treeCount);
 
       alert('Tree count successful!');
@@ -91,8 +91,8 @@ const OrthoMosaicImage: React.FC = () => {
       
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
       
-      {treeCount !== null && (
-        <p>Number of Trees: {treeCount}</p>
+      {TreeCount !== null && (
+        <p>Number of Trees: {TreeCount}</p>
       )}
     </div>
   );
