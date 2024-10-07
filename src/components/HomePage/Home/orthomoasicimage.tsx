@@ -91,8 +91,8 @@ const OrthoMosaicImage: React.FC = () => {
       
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
       
-      {TreeCount !== null && (
-        <p>Number of Trees: {TreeCount}</p>
+      {treeCount !== null && (
+        <p>Number of Trees: {treeCount}</p>
       )}
     </div>
   );
