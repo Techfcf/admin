@@ -53,7 +53,7 @@ const OrthoMosaicImage: React.FC = () => {
       ];
 
       const queryParams = predefinedCoordinates.map(coord => `lat=${coord.lat}&lng=${coord.lng}`).join('&');
-      const response = await fetch(`https://backend.fitclimate.com/auth/count-trees?${queryParams}`, {
+      const response = await fetch(`https://backend.fitclimate.com/auth/api/trees/count?${queryParams}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
