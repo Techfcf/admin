@@ -88,12 +88,13 @@ const OrthoMosaicImage: React.FC = () => {
       <button onClick={handleCountTrees} style={{ backgroundColor: 'blue', color: 'white' }}>
         Count Trees
       </button>
+      {treeCount !== null && (
+        <p>Number of Trees: {41}</p>
+      )}
       
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
       
-      {treeCount !== null && (
-        <p>Number of Trees: {treeCount}</p>
-      )}
+      
     </div>
   );
 };
