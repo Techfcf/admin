@@ -177,52 +177,52 @@ const MapComponent: React.FC<MapComponentProps> = ({}) => {
       }
     };
   
-    const handleGenerateImage = async () => {
-      try {
-          // Define predefined coordinates (latitude and longitude)
-          const predefinedCoordinates = [
-              { lat: 34.1, lng: -118.69 },  // Example coordinates
-              { lat: 34.2, lng: -118.59 },
-              { lat: 34.3, lng: -118.49 },
-              { lat: 34.4, lng: -118.39 }
-          ];
-  
-          // Call the backend API to generate the orthomosaic image
-          const response = await fetch('https://backend.fitclimate.com/auth/orthomosiac-img', {
-              method: 'get',
-              headers: {
-                  'Accept': '*/*',
-                  'Content-Type': 'application/json',
-                  'Origin': 'https://admin.fitclimate.com',
-                  'Referer': 'https://admin.fitclimate.com',
-              },
-              body: JSON.stringify({
-                  area: predefinedCoordinates,  // Use the predefined coordinates
-                  // Add any other required fields based on the API specification
-              }),
-          });
-  
-          // Handle the API response
-          if (!response.ok) {
-              const errorData = await response.json();
-              console.error('Image generation failed:', response.statusText, errorData);
-              alert(`Image generation failed: ${response.statusText} - ${errorData.message || 'Unknown error'}`);
-              return;
+const handleGenerateImage = async () => {
+  try {
+      // Define predefined coordinates (latitude and longitude)
+      const predefinedCoordinates = [
+          { lat: 34.1, lng: -118.69 },  // Example coordinates
+          { lat: 34.2, lng: -118.59 },
+          { lat: 34.3, lng: -118.49 },
+          { lat: 34.4, lng: -118.39 }
+      ];
+
+      // Convert the coordinates into a query string format
+      const queryParams = predefinedCoordinates.map(coord => `lat=${coord.lat}&lng=${coord.lng}`).join('&');
+
+      // Call the backend API using GET method with coordinates as query parameters
+      const response = await fetch(`https://backend.fitclimate.com/auth/orthomosiac-img?${queryParams}`, {
+          method: 'GET',
+          headers: {
+              'Accept': '*/*',
+              'Content-Type': 'application/json',
+              'Origin': 'https://admin.fitclimate.com',
+              'Referer': 'https://admin.fitclimate.com',
           }
-  
-          const data = await response.json();
-          if (data && data.imageUrl) {
-              setGeneratedImage(data.imageUrl); // Update the state with the image URL
-              alert('Image generation successful!');
-          } else {
-              console.error('Unexpected API response:', data);
-              alert('Image generation failed: Unexpected API response format.');
-          }
-      } catch (error) {
-          console.error('An error occurred while generating the image:', error);
-          alert('An error occurred while generating the image. Please try again later.');
+      });
+
+      // Handle the API response
+      if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Image generation failed:', response.statusText, errorData);
+          alert(`Image generation failed: ${response.statusText} - ${errorData.message || 'Unknown error'}`);
+          return;
       }
-  };
+
+      const data = await response.json();
+      if (data && data.imageUrl) {
+          setGeneratedImage(data.imageUrl); // Update the state with the image URL
+          alert('Image generation successful!');
+      } else {
+          console.error('Unexpected API response:', data);
+          alert('Image generation failed: Unexpected API response format.');
+      }
+  } catch (error) {
+      console.error('An error occurred while generating the image:', error);
+      alert('An error occurred while generating the image. Please try again later.');
+  }
+};
+
     return (
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* Left side: Upload section and map */}
