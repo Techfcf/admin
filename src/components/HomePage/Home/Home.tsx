@@ -189,7 +189,7 @@ const MapComponent: React.FC<MapComponentProps> = ({}) => {
   
           // Call the backend API to generate the orthomosaic image
           const response = await fetch('https://backend.fitclimate.com/auth/orthomosiac-img', {
-              method: 'POST',
+              method: 'get',
               headers: {
                   'Accept': '*/*',
                   'Content-Type': 'application/json',
