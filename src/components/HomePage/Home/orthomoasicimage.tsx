@@ -42,8 +42,8 @@ const OrthoMosaicImage: React.FC = () => {
     }
   };
 
-  // Function to count trees by calling the API
-  const handleCountTrees = async () => {
+  // Function to get the tree count from the API
+  const handleGetTreeCount = async () => {
     try {
       const predefinedCoordinates = [
         { lat: 34.1, lng: -118.69 },
@@ -69,11 +69,17 @@ const OrthoMosaicImage: React.FC = () => {
       }
 
       const result = await response.json();
-      console.log('Tree count result:', result);  // Log the response for debugging
+      console.log('Tree count result:', result); // Debugging log
 
+      if (result.treeCount !== undefined) {
+        setTreeCount(result.treeCount); // Directly set the API value
+        alert(`Tree count: ${result.treeCount}`);
+      } else {
+        alert('Tree count not available in the response.');
+      }
     } catch (error) {
-      console.error('An error occurred while counting trees:', error);
-      alert('An error occurred while counting trees. Please try again later.');
+      console.error('An error occurred while fetching the tree count:', error);
+      alert('An error occurred while fetching the tree count. Please try again later.');
     }
   };
 
@@ -83,12 +89,17 @@ const OrthoMosaicImage: React.FC = () => {
         Generate Orthomoasic Image
       </button>
       
-      <button onClick={handleCountTrees} style={{ backgroundColor: 'blue', color: 'white' }}>
-        Count Trees
+      <button onClick={handleGetTreeCount} style={{ backgroundColor: 'blue', color: 'white' }}>
+        Get Tree Count
       </button>
       
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
       
+      {treeCount !== null ? (
+        <p>Number of Trees (from API): {treeCount}</p>
+      ) : (
+        <p>Click "Get Tree Count" to retrieve the number of trees.</p>
+      )}
     </div>
   );
 };
