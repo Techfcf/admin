@@ -70,13 +70,6 @@ const OrthoMosaicImage: React.FC = () => {
 
       const result = await response.json();
       console.log('Tree count result:', result); // Debugging log
-
-      if (result.treeCount !== undefined) {
-        setTreeCount(result.treeCount); // Directly set the API value
-        alert(`Tree count: ${result.treeCount}`);
-      } else {
-        alert('Tree count not available in the response.');
-      }
     } catch (error) {
       console.error('An error occurred while fetching the tree count:', error);
       alert('An error occurred while fetching the tree count. Please try again later.');
@@ -95,11 +88,6 @@ const OrthoMosaicImage: React.FC = () => {
       
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
       
-      {treeCount !== null ? (
-        <p>Number of Trees (from API): {treeCount}</p>
-      ) : (
-        <p>Click "Get Tree Count" to retrieve the number of trees.</p>
-      )}
     </div>
   );
 };
