@@ -9,7 +9,7 @@ interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
