@@ -1,4 +1,3 @@
-// OrthoMosaicImage.tsx
 import React, { useState } from 'react';
 
 const OrthoMosaicImage: React.FC = () => {
@@ -15,8 +14,8 @@ const OrthoMosaicImage: React.FC = () => {
         { lat: 34.4, lng: -118.39 }
       ];
 
-      const queryParams = predefinedCoordinates.map(coord => `lat=${coord.lat}&lng=${coord.lng}`).join('&');
-      const response = await fetch(`https://backend.fitclimate.com/auth/orthomosiac-img?${queryParams}`, {
+      const queryParams = predefinedCoordinates.map(coord => lat=${coord.lat}&lng=${coord.lng}).join('&');
+      const response = await fetch(https://backend.fitclimate.com/auth/orthomosiac-img?${queryParams}, {
         method: 'GET',
         headers: {
           'Accept': 'image/png',
@@ -27,7 +26,7 @@ const OrthoMosaicImage: React.FC = () => {
 
       if (!response.ok) {
         console.error('Image generation failed:', response.statusText);
-        alert(`Image generation failed: ${response.statusText}`);
+        alert(Image generation failed: ${response.statusText});
         return;
       }
 
@@ -42,8 +41,8 @@ const OrthoMosaicImage: React.FC = () => {
     }
   };
 
-  // Function to get the tree count from the API
-  const handleGetTreeCount = async () => {
+  // Function to count trees by calling the API
+  const handleCountTrees = async () => {
     try {
       const predefinedCoordinates = [
         { lat: 34.1, lng: -118.69 },
@@ -52,8 +51,8 @@ const OrthoMosaicImage: React.FC = () => {
         { lat: 34.4, lng: -118.39 }
       ];
 
-      const queryParams = predefinedCoordinates.map(coord => `lat=${coord.lat}&lng=${coord.lng}`).join('&');
-      const response = await fetch(`https://backend.fitclimate.com/auth/api/trees/count?${queryParams}`, {
+      const queryParams = predefinedCoordinates.map(coord => lat=${coord.lat}&lng=${coord.lng}).join('&');
+      const response = await fetch(https://backend.fitclimate.com/auth/api/trees/count?${queryParams}, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -64,15 +63,17 @@ const OrthoMosaicImage: React.FC = () => {
 
       if (!response.ok) {
         console.error('Tree count API call failed:', response.statusText);
-        alert(`Tree count API call failed: ${response.statusText}`);
+        alert(Tree count API call failed: ${response.statusText});
         return;
       }
 
       const result = await response.json();
-      console.log('Tree count result:', result); // Debugging log
+      setTreeCount(result.treeCount);
+
+      alert('Tree count successful!');
     } catch (error) {
-      console.error('An error occurred while fetching the tree count:', error);
-      alert('An error occurred while fetching the tree count. Please try again later.');
+      console.error('An error occurred while counting trees:', error);
+      alert('An error occurred while counting trees. Please try again later.');
     }
   };
 
@@ -82,12 +83,13 @@ const OrthoMosaicImage: React.FC = () => {
         Generate Orthomoasic Image
       </button>
       
-      <button onClick={handleGetTreeCount} style={{ backgroundColor: 'blue', color: 'white' }}>
-        Get Tree Count
+      <button onClick={handleCountTrees} style={{ backgroundColor: 'blue', color: 'white' }}>
+        Count Trees
       </button>
-      
+      {treeCount !== null && (
+        <p>Number of Trees: {treeCount}</p>
+      )}
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
-      
     </div>
   );
 };
