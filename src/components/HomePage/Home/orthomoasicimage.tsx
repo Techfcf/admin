@@ -69,9 +69,14 @@ const OrthoMosaicImage: React.FC = () => {
       }
 
       const result = await response.json();
-      setTreeCount(result.treeCount);
+      console.log('Tree count result:', result);  // Log the response for debugging
 
-      alert('Tree count successful!');
+      if (result.treeCount !== undefined) {
+        setTreeCount(result.treeCount); // Set the tree count
+        alert(`Tree count successful! ${result.treeCount} trees found.`);
+      } else {
+        alert('Tree count not available in the response.');
+      }
     } catch (error) {
       console.error('An error occurred while counting trees:', error);
       alert('An error occurred while counting trees. Please try again later.');
@@ -87,10 +92,14 @@ const OrthoMosaicImage: React.FC = () => {
       <button onClick={handleCountTrees} style={{ backgroundColor: 'blue', color: 'white' }}>
         Count Trees
       </button>
-      {treeCount !== null && (
-        <p>Number of Trees: {treeCount}</p>
-      )}
+      
       {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
+      
+      {treeCount !== null ? (
+        <p>Number of Trees: {treeCount}</p>
+      ) : (
+        <p>Click "Count Trees" to get the number of trees.</p>
+      )}
     </div>
   );
 };
