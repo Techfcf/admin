@@ -61,7 +61,7 @@ const OrthoMosaicImage: React.FC = () => {
           'Referer': 'https://admin.fitclimate.com',
         }
       });
-       console.log("data",response.statusText);
+       alert("data",response.statusText);
 
       if (!response.ok) {
         console.error('Tree count API call failed:', response.statusText);
