@@ -19,7 +19,7 @@ const Navbar = () => {
       </div>
       <div className="navbar_right">
         <div className='right_group'>
-        <a className="nav-link active" aria-current="page" href="https://dev.fitclimate.com/">Home</a>
+        <a className="nav-link active" aria-current="page" href="https://fitclimate.com/">Home</a>
         <a className="nav-link" href="https://fitclimate.com/createimpact">Create Impact</a>
         <a className="nav-link" href="https://fitclimate.com/about">About Us</a>
         <a className="nav-link" href="https://fitclimate.com/contact" tabIndex={-1} aria-disabled="true">Contact Us</a>
