@@ -23,7 +23,7 @@ const Navbar = () => {
         <a className="nav-link" href="https://fitclimate.com/createimpact">Create Impact</a>
         <a className="nav-link" href="https://fitclimate.com/about">About Us</a>
         <a className="nav-link" href="https://fitclimate.com/contact" tabIndex={-1} aria-disabled="true">Contact Us</a>
-        <a className="nav-link" href="https://fitclimate.com/" tabIndex={-1} aria-disabled="true">Logout</a>
+        <a className="nav-link" href="https://fitclimate.com/createimpact/" tabIndex={-1} aria-disabled="true">Logout</a>
         </div>
       </div>
       <div className="navbar_right_mobile">
