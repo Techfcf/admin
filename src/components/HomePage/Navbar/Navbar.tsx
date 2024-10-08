@@ -20,9 +20,9 @@ const Navbar = () => {
       <div className="navbar_right">
         <div className='right_group'>
         <a className="nav-link active" aria-current="page" href="https://dev.fitclimate.com/">Home</a>
-        <a className="nav-link" href="https://dev.fitclimate.com/createimpact">Create Impact</a>
-        <a className="nav-link" href="https://dev.fitclimate.com/about">About Us</a>
-        <a className="nav-link" href="https://dev.fitclimate.com/contact" tabIndex={-1} aria-disabled="true">Contact Us</a>
+        <a className="nav-link" href="https://fitclimate.com/createimpact">Create Impact</a>
+        <a className="nav-link" href="https://fitclimate.com/about">About Us</a>
+        <a className="nav-link" href="https://fitclimate.com/contact" tabIndex={-1} aria-disabled="true">Contact Us</a>
         <a className="nav-link" href="https://fitclimate.com/logout/" tabIndex={-1} aria-disabled="true">Logout</a>
         </div>
       </div>
