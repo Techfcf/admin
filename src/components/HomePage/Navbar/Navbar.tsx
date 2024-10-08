@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <div className='navbar'>
       <div className="navbar_left">
-      <a className="navbar-brand" href="https://dev.fitclimate.com/">
+      <a className="navbar-brand" href="https://fitclimate.com/">
           <img src="./assets/new_logo.png" alt="" width="120" height="80" className="d-inline-block align-text-top" />
       </a>
       </div>
