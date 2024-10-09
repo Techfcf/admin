@@ -14,6 +14,7 @@ const MapComponent: React.FC<MapComponentProps> = ({}) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
+  const [kmlData, setKmlData] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -165,23 +166,116 @@ const MapComponent: React.FC<MapComponentProps> = ({}) => {
     }
   };
 
+  const generateKML = () => {
+    if (!shapes) {
+      alert('Please draw a shape first.');
+      return;
+    }
+
+    const kmlTemplateStart = `<?xml version="1.0" encoding="UTF-8"?>
+      <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document>
+          <name>Drawn AOI</name>
+          <Placemark>`;
+
+    const kmlTemplateEnd = `
+          </Placemark>
+        </Document>
+      </kml>`;
+
+    let coordinates = '';
+
+    if (shapes instanceof google.maps.Polygon) {
+      const paths = shapes.getPath().getArray();
+      coordinates = paths
+        .map((latLng) => `${latLng.lng()},${latLng.lat()},0`)
+        .join(' ');
+
+      setKmlData(
+        `${kmlTemplateStart}
+          <Polygon>
+            <outerBoundaryIs>
+              <LinearRing>
+                <coordinates>${coordinates}</coordinates>
+              </LinearRing>
+            </outerBoundaryIs>
+          </Polygon>
+        ${kmlTemplateEnd}`
+      );
+    } else if (shapes instanceof google.maps.Rectangle) {
+      const bounds = shapes.getBounds();
+
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+
+        const coordinates = `${sw.lng()},${sw.lat()},0 ${ne.lng()},${sw.lat()},0 ${ne.lng()},${ne.lat()},0 ${sw.lng()},${ne.lat()},0 ${sw.lng()},${sw.lat()},0`;
+
+        setKmlData(
+          `${kmlTemplateStart}
+            <Polygon>
+              <outerBoundaryIs>
+                <LinearRing>
+                  <coordinates>${coordinates}</coordinates>
+                </LinearRing>
+              </outerBoundaryIs>
+            </Polygon>
+          ${kmlTemplateEnd}`
+        );
+      }
+    }
+  };
+  const downloadKML = () => {
+    if (!kmlData) return;
+
+    const blob = new Blob([kmlData], { type: 'application/vnd.google-earth.kml+xml' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'aoi.kml';
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
-    <div id="uploadAOI" className="tabcontent" style={{ display: 'block' }}>
-      <form action="/analytics/uploadShp" id="uploadAOIForm" encType="multipart/form-data" method="POST">
-        Upload File:<br />
-        Supported File Formats are:
-        <ul>
-          <li>GeoJSON</li>
-          <li>KML</li>
-          <li>ESRI Shapefile in Zipped Format</li>
-        </ul>
-      </form>
+      <div id="uploadAOI" className="tabcontent" style={{ display: 'block' }}>
+        <form action="/analytics/uploadShp" id="uploadAOIForm" encType="multipart/form-data" method="POST">
+          Upload File:<br />
+          Supported File Formats are:
+          <ul>
+            <li>GeoJSON</li>
+            <li>KML</li>
+            <li>ESRI Shapefile in Zipped Format</li>
+          </ul>
+        </form>
+      </div>
+      <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
+          <button 
+            onClick={handleFileSubmit} 
+            style={{ margin: '10px', backgroundColor: '#4CAF50', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Upload File
+          </button>
+          <button 
+            onClick={generateKML} 
+            style={{ margin: '10px', backgroundColor: '#2196F3', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Generate KML
+          </button>
+          {kmlData && (
+            <button 
+              onClick={downloadKML} 
+              style={{ margin: '10px', backgroundColor: '#f44336', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            >
+              Download KML
+            </button>
+          )}
+
+      <div id="map" style={{ height: '500px', width: '100%' }}></div>
     </div>
-    <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
-    <button onClick={handleFileSubmit}>Upload File</button>
-    <div id="map" style={{ height: '500px', width: '100%' }}></div>
-  </div>
   );
 };
 
