@@ -37,7 +37,7 @@ const SatelliteSensorSelection: React.FC<SatelliteSensorSelectionProps> = ({ onS
 
   const [geoJsonData, setGeoJsonData] = useState<any | null>(null);
   const [ndviData, setNdviData] = useState<any | null>(null);
-  const [isGeoJsonLoaded, setIsGeoJsonLoaded] = useState<boolean>(false); // Track if GeoJSON is loaded
+  const [, setIsGeoJsonLoaded] = useState<boolean>(false); // Track if GeoJSON is loaded
 
   const loadGEE = () => {
     return new Promise<void>((resolve) => {

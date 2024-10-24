@@ -3,38 +3,39 @@ import { Loader } from '@googlemaps/js-api-loader';
 import * as toGeoJSON from '@tmcw/togeojson';
 import JSZip from 'jszip';
 import './Home.scss';
-import SatelliteSensorSelection from './SatelliteSensorSelection'; // Import the new component
+import OrthoMosaicImage from './orthomoasicimage';
+import SatelliteSensorSelection from './SatelliteSensorSelection';
+
 interface MapComponentProps {
   onFileUpload: (file: File) => void;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ }) => {
+const MapComponent: React.FC<MapComponentProps> = ({}) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
+  const [kmlData, setKmlData] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const loader = new Loader({
-      apiKey: 'AIzaSyD_RsZX1HUnKShcqmWTz3COHmWWlQ0Gn_E', // Replace with your Google Maps API key
+      apiKey: 'AIzaSyD_RsZX1HUnKShcqmWTz3COHmWWlQ0Gn_E',
       version: 'weekly',
       libraries: ['drawing'],
     });
 
     loader.load().then(() => {
       const googleMaps = window.google.maps;
-
-      // Initialize the map
       const mapInstance = new googleMaps.Map(document.getElementById('map') as HTMLElement, {
         center: { lat: 34.1, lng: -118.69 },
         zoom: 10,
       });
+
       const drawingManagerInstance = new googleMaps.drawing.DrawingManager({
         drawingMode: null,
         drawingControl: true,
         drawingControlOptions: {
           position: googleMaps.ControlPosition.TOP_LEFT,
-    
         },
         polygonOptions: {
           editable: true,
@@ -46,33 +47,27 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
         },
       });
 
-      // Set up the Drawing Manager on the map
       drawingManagerInstance.setMap(mapInstance);
-
-      // Set the map and drawing manager state
       setMap(mapInstance);
       setDrawingManager(drawingManagerInstance);
 
-      // Add event listeners for drawing completion
       googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event: google.maps.drawing.OverlayCompleteEvent) => {
         if (shapes) {
           shapes.setMap(null);
         }
-      
+
         const overlay = event.overlay;
-      
-        // Check if the overlay is a Polygon or Rectangle
         if (overlay instanceof google.maps.Polygon || overlay instanceof google.maps.Rectangle) {
           setShapes(overlay);
         } else {
-          // Optionally handle other types or ignore
           console.warn('Unsupported shape type:', overlay);
         }
-      
+
         drawingManagerInstance.setDrawingMode(null);
       });
     });
   }, [shapes]);
+
   const handleFileSubmit = async () => {
     const file = fileInputRef.current?.files?.[0];
 
@@ -82,7 +77,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
     }
 
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-
     if (fileExtension === 'kml') {
       handleKMLFile(file);
     } else if (fileExtension === 'geojson') {
@@ -101,7 +95,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
       const parser = new DOMParser();
       const kmlDom = parser.parseFromString(kmlText, 'application/xml');
       const geoJsonData = toGeoJSON.kml(kmlDom);
-
       addDataToMap(geoJsonData);
     };
     reader.readAsText(file);
@@ -112,7 +105,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
     reader.onload = function (e) {
       const geoJsonText = e.target?.result as string;
       const geoJsonData = JSON.parse(geoJsonText);
-
       addDataToMap(geoJsonData);
     };
     reader.readAsText(file);
@@ -128,12 +120,10 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
         const parser = new DOMParser();
         const kmlDom = parser.parseFromString(kmlText, 'application/xml');
         const geoJsonData = toGeoJSON.kml(kmlDom);
-
         addDataToMap(geoJsonData);
       } else if (zipEntry.name.endsWith('.geojson')) {
         const geoJsonText = await zipEntry.async('string');
         const geoJsonData = JSON.parse(geoJsonText);
-
         addDataToMap(geoJsonData);
       }
     });
@@ -146,7 +136,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
 
       geoJsonData.features.forEach((feature: any) => {
         const geometry = feature.geometry;
-
         if (geometry) {
           if (geometry.type === 'Point') {
             const [lng, lat] = geometry.coordinates;
@@ -177,118 +166,77 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
     }
   };
 
-  const calculateNDVI = async () => {
-  if (!map) return;
-
-  try {
-    // Fetch NIR and RED images (replace URLs with actual image sources)
-    const nirImageResponse = await fetch('https://gibs.earthdata.nasa.gov/');
-    const redImageResponse = await fetch('https://gibs.earthdata.nasa.gov/');
-
-    const nirBlob = await nirImageResponse.blob();
-    const redBlob = await redImageResponse.blob();
-
-    // Convert blobs to ImageData
-    const nirData = await getImageData(nirBlob);
-    const redData = await getImageData(redBlob);
-
-    // Calculate NDVI
-    const ndviData = computeNDVI(nirData, redData);
-
-    // Create NDVI image (returns base64 URL)
-    const ndviImageUrl = createNDVIImage(ndviData);
-
-    // Create an ImageMapType for NDVI layer using the generated NDVI image URL
-    const ndviLayer = new google.maps.ImageMapType({
-      getTileUrl: (_coord, _zoom) => {
-        return ndviImageUrl;
-      },
-      tileSize: new google.maps.Size(256, 256),
-      opacity: 0.7, // You can adjust the opacity of the NDVI layer
-    });
-
-    // Add NDVI layer to the map on top of the default satellite layer
-    if (ndviLayer && map) {
-<<<<<<< HEAD
-      map.overlayMapTypes.insertAt(0,ndviLayer); // Add NDVI layer as the first overlay
-=======
->>>>>>> 02326528aa5bce4085ece5f0b88d7f79d43447fd
-      console.log("NDVI layer added to the map.");
+  const generateKML = () => {
+    if (!shapes) {
+      alert('Please draw a shape first.');
+      return;
     }
-  } catch (error) {
-    console.error('Error calculating NDVI:', error);
-  }
-};
 
-  
-  // Helper function to convert Blob to ImageData
-  const getImageData = (blob: Blob): Promise<ImageData> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-  
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.drawImage(img, 0, 0);
-        const imageData = ctx?.getImageData(0, 0, img.width, img.height);
-        if (imageData) resolve(imageData);
-      };
-  
-      const url = URL.createObjectURL(blob);
-      img.src = url;
-    });
-  };
-  
-  // Compute NDVI using the NIR and RED ImageData objects
-  const computeNDVI = (nirData: ImageData, redData: ImageData): number[][] => {
-    const width = nirData.width;
-    const height = nirData.height;
-  
-    const ndviArray: number[][] = [];
-  
-    for (let y = 0; y < height; y++) {
-      const row: number[] = [];
-      for (let x = 0; x < width; x++) {
-        const nirPixel = nirData.data[(y * width + x) * 4]; // Assuming NIR value is in red channel of NIR image
-        const redPixel = redData.data[(y * width + x) * 4]; // Assuming RED value is in red channel of Red image
-  
-        const ndvi = (nirPixel - redPixel) / (nirPixel + redPixel);
-        row.push(isNaN(ndvi) ? 0 : ndvi); // Avoid NaN values
-      }
-      ndviArray.push(row);
-    }
-  
-    return ndviArray;
-  };
-  
-  // Create NDVI image from NDVI array (returns a base64 image string)
-  const createNDVIImage = (ndviArray: number[][]): string => {
-    const width = ndviArray[0].length;
-    const height = ndviArray.length;
-  
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    const imageData = ctx?.createImageData(width, height);
-    const data = imageData?.data;
-  
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const ndvi = (ndviArray[y][x] + 1) / 2; // Scale NDVI from -1..1 to 0..1
-        const pixelIndex = (y * width + x) * 4;
-  
-        data![pixelIndex] = 0; // Red
-        data![pixelIndex + 1] = Math.floor(ndvi * 255); // Green (NDVI)
-        data![pixelIndex + 2] = 0; // Blue
-        data![pixelIndex + 3] = 255; // Alpha
+    const kmlTemplateStart = `<?xml version="1.0" encoding="UTF-8"?>
+      <kml xmlns="http://www.opengis.net/kml/2.2">
+        <Document>
+          <name>Drawn AOI</name>
+          <Placemark>`;
+
+    const kmlTemplateEnd = `
+          </Placemark>
+        </Document>
+      </kml>`;
+
+    let coordinates = '';
+
+    if (shapes instanceof google.maps.Polygon) {
+      const paths = shapes.getPath().getArray();
+      coordinates = paths
+        .map((latLng) => `${latLng.lng()},${latLng.lat()},0`)
+        .join(' ');
+
+      setKmlData(
+        `${kmlTemplateStart}
+          <Polygon>
+            <outerBoundaryIs>
+              <LinearRing>
+                <coordinates>${coordinates}</coordinates>
+              </LinearRing>
+            </outerBoundaryIs>
+          </Polygon>
+        ${kmlTemplateEnd}`
+      );
+    } else if (shapes instanceof google.maps.Rectangle) {
+      const bounds = shapes.getBounds();
+
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+
+        const coordinates = `${sw.lng()},${sw.lat()},0 ${ne.lng()},${sw.lat()},0 ${ne.lng()},${ne.lat()},0 ${sw.lng()},${ne.lat()},0 ${sw.lng()},${sw.lat()},0`;
+
+        setKmlData(
+          `${kmlTemplateStart}
+            <Polygon>
+              <outerBoundaryIs>
+                <LinearRing>
+                  <coordinates>${coordinates}</coordinates>
+                </LinearRing>
+              </outerBoundaryIs>
+            </Polygon>
+          ${kmlTemplateEnd}`
+        );
       }
     }
-  
-    ctx?.putImageData(imageData!, 0, 0);
-    return canvas.toDataURL(); // Return the base64 image string
+  };
+  const downloadKML = () => {
+    if (!kmlData) return;
+
+    const blob = new Blob([kmlData], { type: 'application/vnd.google-earth.kml+xml' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'aoi.kml';
+    link.click();
+
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -305,31 +253,45 @@ const MapComponent: React.FC<MapComponentProps> = ({ }) => {
         </form>
       </div>
       <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
-      <button onClick={handleFileSubmit}>Upload File</button>
-      <button onClick={calculateNDVI} style={{ marginLeft: '20px' }}>Calculate NDVI</button>
+          <button 
+            onClick={handleFileSubmit} 
+            style={{ margin: '10px', backgroundColor: '#4CAF50', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Upload File
+          </button>
+          <button 
+            onClick={generateKML} 
+            style={{ margin: '10px', backgroundColor: '#2196F3', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Generate KML
+          </button>
+          {kmlData && (
+            <button 
+              onClick={downloadKML} 
+              style={{ margin: '10px', backgroundColor: '#f44336', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            >
+              Download KML
+            </button>
+          )}
+
       <div id="map" style={{ height: '500px', width: '100%' }}></div>
     </div>
   );
 };
 
 const MainComponent: React.FC = () => {
-  const [, setSatelliteData] = useState(null); // State for satellite form data
-  const [, setUploadedFile] = useState<File | null>(null); // State for AOI file upload
+  const [, setSatelliteData] = useState(null);
+  const [, setUploadedFile] = useState<File | null>(null);
 
-  // Handle Tab Change
-
-  // Handle satellite form submission
   const handleSatelliteSubmit = (data: any) => {
     setSatelliteData(data);
     console.log('Satellite Data:', data);
   };
 
-  // Handle AOI file upload
   const handleFileUpload = (file: File) => {
     setUploadedFile(file);
     console.log('Uploaded AOI File:', file);
   };
-
 
   return (
     <div className="form-div height_fix" style={{ background: 'linear-gradient(#5d5d5d, rgb(113, 135, 137))', color: 'white', padding: '0px' }}>
@@ -342,7 +304,6 @@ const MainComponent: React.FC = () => {
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              {/* Render MapComponent and pass the handleFileUpload function */}
               <MapComponent onFileUpload={handleFileUpload} />
             </div>
           </div>
@@ -355,13 +316,21 @@ const MainComponent: React.FC = () => {
           </h2>
           <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              {/* Render SatelliteSensorSelection and pass the handleSatelliteSubmit function */}
               <SatelliteSensorSelection onSubmit={handleSatelliteSubmit} />
             </div>
           </div>
         </div>
         <div className="submit-section">
-         
+          <h2 className="accordion-header" id="headingTwo">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <h5>3. OrthomoasicImage</h5>
+              </button>
+            </h2>
+            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <OrthoMosaicImage/>
+              </div>
+            </div>
         </div>
       </div>
     </div>
