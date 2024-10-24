@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import './Home.scss';
 import OrthoMosaicImage from './orthomoasicimage';
 import SatelliteSensorSelection from './SatelliteSensorSelection';
+import SentnelHub from './sentnelhub';
 
 interface MapComponentProps {
   onFileUpload: (file: File) => void;
@@ -329,6 +330,18 @@ const MainComponent: React.FC = () => {
             <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div className="accordion-body">
                 <OrthoMosaicImage/>
+              </div>
+            </div>
+        </div>
+        <div className="submit-section">
+          <h2 className="accordion-header" id="headingTwo">
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <h5>4. Sentnel-Hub</h5>
+              </button>
+            </h2>
+            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <SentnelHub/>
               </div>
             </div>
         </div>
