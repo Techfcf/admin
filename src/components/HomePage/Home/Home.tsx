@@ -1,0 +1,88 @@
+import React from 'react';
+import './Home.scss';
+import { useNavigate } from 'react-router-dom';
+
+const Sentinel = () => {
+  window.location.href = 'https://sentnel-hub.netlify.app/';
+};
+
+const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleAreaOfInterest = (): void => {
+    navigate('/AreaOfinterest');
+  };
+
+  const handleSatellite = (): void => {
+    navigate('/Satellite');
+  };
+
+  const handleOrthoMosaicImage = (): void => {
+    navigate('/orthomoasicimage');
+  };
+  const handlecreatesector = (): void => {
+    navigate('/createsector');
+  };
+  const handleCreateProject = (): void =>{
+    navigate('/CreateProject');
+  }
+  const handleFetchProject = (): void =>{
+    navigate('/FetchProject');
+  }
+ 
+ 
+
+
+  return (
+  
+      <div className="sidebar">
+        <h1 className="h1">Our Services</h1>
+        <div className="box">
+          <p>
+            Area of Interest feature supports GeoJSON, KML, and zipped ESRI shapefiles. Upload files to visualize regions, generate KML, and download for use in GIS or mapping platforms.
+          </p>
+          <button onClick={handleAreaOfInterest}>Area of Interest</button>
+        </div>
+        <div className="box">
+          <p>
+            Satellite/Sensor Selection refers to the process of choosing the most suitable satellite or sensor based on specific project requirements.
+          </p>
+          <button onClick={handleSatellite}>Satellite/Sensor Selection</button>
+        </div>
+        <div className="box">
+          <p>
+            An orthomosaic image is a high-resolution, geometrically corrected map created from multiple overlapping aerial or satellite images.
+          </p>
+          <button onClick={handleOrthoMosaicImage}>Orthomosaic Image</button>
+        </div>
+        <div className="box">
+          <img src="public/assets/download.png" alt="Sentinel Hub Logo" />
+          <p>
+            Sentinel Hub is a powerful tool used for Earth Observation data. It provides easy access to satellite imagery.
+          </p>
+          <button onClick={Sentinel}>Sentinel</button>
+        </div>
+        <div className="box">
+        <p>
+          Create Sector" involves defining and organizing specific business or operational areas to streamline activities, improve focus, and drive growth.
+          </p>
+          <button onClick={handlecreatesector}>Create Sectors</button>
+        </div>
+        <div className="box">
+            <p>
+          "Create Project" involves planning, defining objectives, allocating resources, setting timelines, and executing tasks to achieve specific project goals efficiently.
+          </p>
+          <button onClick={handleCreateProject}>Create Project</button>
+        </div>
+        <div className="box">
+          <p>
+          Fetch Project retrieves and displays project details effortlessly
+          </p>
+          <button onClick={handleFetchProject}>Fetch Project</button>
+        </div>
+      
+    </div>
+  );
+};
+
+export default Home;

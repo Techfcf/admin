@@ -1,0 +1,85 @@
+.form-con {
+    width:600px;
+    max-width:900px;
+    position: relative;
+    top:300px;
+    left:350px;
+    padding: 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: transparent; /* Remove background color */
+
+    
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+  }
+  
+
+  .sidebar{
+  position: relative;
+  left:0px;
+  top:100px;
+  background-image: url(/public/assets/school2.png);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #080808;
+  }
+  
+  .form-group {
+    margin-bottom:0px;
+  }
+  
+  label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #161515;
+  }
+  
+  select,
+  input[type="file"],
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  textarea {
+    resize: vertical;
+    height: 120px;
+  }
+  
+  button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #363636;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button.submit-btn:hover {
+    background-color: #878f84d7;
+  }
+  
+  button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  

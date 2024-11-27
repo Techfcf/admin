@@ -1,0 +1,61 @@
+.tabcontent {
+    padding:10px;
+    top: 0%;
+    background-color: #776565;
+    margin:2px 0;
+  
+    h1 {
+      text-align: center;
+    }
+  }
+  
+  .upload-btn,
+  .generate-btn,
+  .download-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  
+    &.upload-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+  
+    &.generate-btn {
+      background-color: #2196f3;
+      color: white;
+    }
+  
+    &.download-btn {
+      background-color: #f44336;
+      color: white;
+    }
+  }
+  
+  #map {
+    height: 500px;
+    width: 100%;
+  }
+  
+  .accordion-button {
+    background-color: #5d5d5d;
+    color: white;
+  }
+  
+  .accordion-collapse {
+    background-color: #4d4d4d;
+  }
+  
+  .form-div {
+    background: linear-gradient(#5d5d5d, rgb(113, 135, 137));
+    color: white;
+    padding: 0px;
+    height: 100%;
+  }
+  
+  .accordion-item {
+    margin-bottom: 10px;
+  }
+  

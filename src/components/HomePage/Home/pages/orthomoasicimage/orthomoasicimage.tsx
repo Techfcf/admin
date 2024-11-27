@@ -1,0 +1,128 @@
+import React, { useState } from 'react';
+import './OrthoMosaicImage.scss';
+
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
+const OrthoMosaicImage: React.FC = () => {
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [treeCount, setTreeCount] = useState<number | null>(null);
+
+  // Function to generate orthomosaic image
+  const handleGenerateImage = async (): Promise<void> => {
+    try {
+      const predefinedCoordinates: Coordinates[] = [
+        { lat: 34.1, lng: -118.69 },
+        { lat: 34.2, lng: -118.59 },
+        { lat: 34.3, lng: -118.49 },
+        { lat: 34.4, lng: -118.39 }
+      ];
+
+      const queryParams = predefinedCoordinates
+        .map(coord => `lat=${coord.lat}&lng=${coord.lng}`)
+        .join('&');
+
+      const response = await fetch(
+        `https://backend.fitclimate.com/auth/orthomosiac-img?${queryParams}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'image/png',
+            Origin: 'https://admin.fitclimate.com',
+            Referer: 'https://admin.fitclimate.com'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Image generation failed:', response.statusText);
+        alert(`Image generation failed: ${response.statusText}`);
+        return;
+      }
+
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setGeneratedImage(imageUrl);
+
+      alert('Image generation successful!');
+    } catch (error) {
+      console.error('An error occurred while generating the image:', error);
+      alert('An error occurred while generating the image. Please try again later.');
+    }
+  };
+
+  // Function to count trees by calling the API
+  const handleCountTrees = async (): Promise<void> => {
+    try {
+      const predefinedCoordinates: Coordinates[] = [
+        { lat: 34.1, lng: -118.69 },
+        { lat: 34.2, lng: -118.59 },
+        { lat: 34.3, lng: -118.49 },
+        { lat: 34.4, lng: -118.39 }
+      ];
+
+      const queryParams = predefinedCoordinates
+        .map(coord => `lat=${coord.lat}&lng=${coord.lng}`)
+        .join('&');
+
+      const response = await fetch(
+        `https://backend.fitclimate.com/auth/api/trees/count?${queryParams}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            Origin: 'https://admin.fitclimate.com',
+            Referer: 'https://admin.fitclimate.com'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Tree count API call failed:', response.statusText);
+        alert(`Tree count API call failed: ${response.statusText}`);
+        return;
+      }
+
+      const result = await response.json();
+      setTreeCount(result.treeCount);
+
+      alert('Tree count successful!');
+    } catch (error) {
+      console.error('An error occurred while counting trees:', error);
+      alert('An error occurred while counting trees. Please try again later.');
+    }
+  };
+
+  return (
+    
+    <div className='btn'>
+      <div className='side'>
+     <button
+  onClick={handleGenerateImage}
+  type="button" // Explicitly set type to button
+ 
+>
+  Generate Orthomosaic Image
+</button>
+
+<button
+  onClick={handleCountTrees}
+  type="button" // Explicitly set type to button
+
+>
+  Count Trees
+</button>
+
+      {treeCount !== null && <p>Number of Trees: {treeCount}</p>}
+
+      {generatedImage && <img src={generatedImage} alt="Generated Orthoimage" />}
+
+    </div>
+    </div>
+    
+  );
+};
+
+export default OrthoMosaicImage;

@@ -1,0 +1,153 @@
+/* Variables */
+$sidebar-bg-color: #055a5a9c;
+$box-bg-color: #f9f9f9;
+$box-border-color: #ddd;
+$box-shadow: 0px 2px 4px rgba(4, 47, 65, 0.1), 0px 5px 15px rgba(5, 68, 68, 0.2);
+$hover-box-shadow: 0px 4px 8px rgba(5, 29, 43, 0.15), 0px 8px 25px rgba(0, 0, 0, 0.3);
+$button-bg-color: #241d1d;
+$button-hover-bg-color: #165706;
+$save-btn-bg-color: #4caf50;
+$save-btn-hover-bg-color: #45a049;
+$text-color: #456d04;
+$heading-color: #f5f7f3;
+$heading-hover-color: #d4b112;
+
+/* Sidebar styles */
+.sidebar {
+  position: relative;
+  left: 0;
+  top:220px;
+  background-image: url(/public/assets/school2.png);
+  background-size: cover;
+  background-position: center;
+  background-color: $sidebar-bg-color;
+  background-attachment: fixed;
+  width: 100%; /* Use full width for responsiveness */
+  height:1500px; /* Let the height adjust based on content */
+  background-color: $sidebar-bg-color;
+  display: grid; /* Use grid for better responsiveness */
+  grid-template-columns: repeat(3, 1fr); /* Default 3 columns */
+  gap:0px; /* Space between boxes */
+  padding:0px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  .h1{
+    position: relative;
+    left: 20px;
+    top:90px;
+    font-size: 35px;
+    text-align: center;
+    grid-column: span 3;
+
+    &:hover {
+      color: $heading-hover-color;
+    }
+  }
+
+  .box {
+    width: 60%; /* Allow each box to use full width within its grid cell */
+                /* Prevent box from growing too wide */
+    height:220px;
+    background-color:#ddffcb;
+    border: 1px solid $box-border-color;
+    padding:5px;
+    box-shadow: $box-shadow;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    left:75px;
+    top:170px;
+    text-align: center;
+    border-radius: 20px;
+    gap:0px;
+    transition: box-shadow 0.1s ease; /* Smooth transition for shadow effect */
+
+    img {
+      width: 50px;
+      height:25px;
+    }
+    
+
+    &:hover {
+      box-shadow: $hover-box-shadow;
+    }
+
+    p {
+      margin: 10px;
+      font-size: 14px;
+      color: rgb(45, 46, 45);
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      max-width:150px; /* Limit the button width */
+      padding:5px;
+      margin: 15px 0;
+      font-size:15px;
+      background-color: $button-bg-color;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+     
+     
+
+      &:hover {
+        background-color: $button-hover-bg-color;
+      }
+    }
+
+    .save-btn {
+      background-color: $save-btn-bg-color;
+
+      &:hover {
+        background-color: $save-btn-hover-bg-color;
+      }
+    }
+  }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    grid-template-columns: 1fr; /* Stack boxes vertically */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .box {
+      width: 70%; /* Full width for boxes on smaller screens */
+      max-width: none; /* Remove max-width limit */
+      margin-bottom: 20px; /* Add space between boxes */
+    }
+
+    .h1 {
+      font-size: 28px; /* Adjust heading size */
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    grid-template-columns: 1fr; /* Stack boxes vertically */
+    padding: 10px;
+
+    .box {
+      width: 70%; /* Full width for boxes */
+      height: auto; /* Let box height adjust automatically */
+      padding: 10px; /* Less padding on smaller screens */
+    }
+
+    .box button {
+      width: 100%; /* Buttons take full width */
+      font-size: 14px; /* Smaller button font size */
+    }
+
+    .h1 {
+      font-size: 24px; /* Smaller heading for mobile */
+    }
+  }
+}
