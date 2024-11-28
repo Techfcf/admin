@@ -3,9 +3,19 @@ import axios from "axios";
 import "./CreateProject.scss";
 
 const CreateProject: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    sectorType: string;
+    kmlFile: File | null;
+    projectDescription: string;
+    projectArea: number;
+    startDate: string;
+    projectStatus: string;
+    spgImpact: string;
+  }>({
+    name: "",
     sectorType: "",
-    kmlFile: null as File | null,
+    kmlFile: null,
     projectDescription: "",
     projectArea: 0,
     startDate: "",
@@ -63,19 +73,33 @@ const CreateProject: React.FC = () => {
     e.preventDefault();
 
     try {
+      // Create a FormData instance
       const submissionData = new FormData();
-      submissionData.append("sectorType", formData.sectorType);
-      if (formData.kmlFile) {
-        submissionData.append("kmlFile", formData.kmlFile);
-      }
-      submissionData.append("projectDescription", formData.projectDescription);
-      submissionData.append("projectArea", formData.projectArea.toString());
-      submissionData.append("startDate", formData.startDate);
-      submissionData.append("projectStatus", formData.projectStatus);
-      submissionData.append("spgImpact", formData.spgImpact);
 
+      // Append the KML file to the form data
+      if (formData.kmlFile) {
+        submissionData.append("file", formData.kmlFile);
+      } else {
+        alert("Please upload a KML file.");
+        return;
+      }
+
+      // Append the project details as JSON string
+      const projectData = {
+        name: formData.name,
+        area: formData.projectArea,
+        status: formData.projectStatus,
+        impact: formData.spgImpact,
+        sectorId: sectors.find((sector) => sector.name === formData.sectorType)?.id, // Match sectorType to sectorId
+        projectDesc: formData.projectDescription,
+        startDate: formData.startDate,
+      };
+
+      submissionData.append("project", JSON.stringify(projectData));
+
+      // Send the POST request using axios
       const response = await axios.post(
-        "https://backend.fitclimate.com/api/projects/create",
+        "https://backend.fitclimate.com/api/projects/create-project",
         submissionData,
         {
           headers: {
@@ -84,8 +108,9 @@ const CreateProject: React.FC = () => {
         }
       );
 
+      // Handle success
       alert("Project created successfully!");
-      console.log("Form Submitted Successfully:", response.data);
+      console.log("Response:", response.data);
     } catch (err) {
       console.error("Error submitting the form:", err);
       alert("Failed to submit the form. Please try again.");
@@ -130,7 +155,7 @@ const CreateProject: React.FC = () => {
               id="kmlFile"
               name="kmlFile"
               accept=".kml"
-              onChange={handleFileChange} // Fixed: Attached the handler
+              onChange={handleFileChange}
               required
             />
           </div>
