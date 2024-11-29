@@ -5,7 +5,7 @@ import "./CreateProject.scss";
 const CreateProject: React.FC = () => {
   const [formData, setFormData] = useState<{
     name: string;
-    sectorType: string;
+    sectorId: string; // To store sector ID
     kmlFile: File | null;
     projectDescription: string;
     projectArea: number;
@@ -14,7 +14,7 @@ const CreateProject: React.FC = () => {
     spgImpact: string;
   }>({
     name: "",
-    sectorType: "",
+    sectorId: "",
     kmlFile: null,
     projectDescription: "",
     projectArea: 0,
@@ -27,6 +27,7 @@ const CreateProject: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch sectors from API
   useEffect(() => {
     const fetchSectors = async () => {
       setLoading(true);
@@ -35,7 +36,7 @@ const CreateProject: React.FC = () => {
           "https://backend.fitclimate.com/api/projects/fetch-all-sectors"
         );
 
-        if (response.data) {
+        if (response.data && Array.isArray(response.data)) {
           const parsedSectors = response.data.map((sector: any) => ({
             id: sector.id,
             name: sector.sectorName || "Unnamed Sector",
@@ -45,7 +46,8 @@ const CreateProject: React.FC = () => {
           setSectors([]);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred.");
+        console.error("Error fetching sectors:", err);
+        setError("Failed to fetch sectors.");
       } finally {
         setLoading(false);
       }
@@ -54,6 +56,7 @@ const CreateProject: React.FC = () => {
     fetchSectors();
   }, []);
 
+  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -63,20 +66,26 @@ const CreateProject: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle file input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData({ ...formData, kmlFile: e.target.files[0] });
     }
   };
 
+  // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.sectorId) {
+      alert("Please select a sector.");
+      return;
+    }
+
     try {
-      // Create a FormData instance
       const submissionData = new FormData();
 
-      // Append the KML file to the form data
+      // Append the KML file
       if (formData.kmlFile) {
         submissionData.append("file", formData.kmlFile);
       } else {
@@ -84,20 +93,20 @@ const CreateProject: React.FC = () => {
         return;
       }
 
-      // Append the project details as JSON string
+      // Append the project details
       const projectData = {
         name: formData.name,
         area: formData.projectArea,
-        status: formData.projectStatus,
-        impact: formData.spgImpact,
-        sectorId: sectors.find((sector) => sector.name === formData.sectorType)?.id, // Match sectorType to sectorId
+        status: formData.projectStatus || null,
+        impact: formData.spgImpact || null,
+        sectorId: Number(formData.sectorId), // Convert to number for API
         projectDesc: formData.projectDescription,
-        startDate: formData.startDate,
+        startDate: formData.startDate || null,
       };
 
       submissionData.append("project", JSON.stringify(projectData));
 
-      // Send the POST request using axios
+      // Send POST request
       const response = await axios.post(
         "https://backend.fitclimate.com/api/projects/create-project",
         submissionData,
@@ -108,27 +117,32 @@ const CreateProject: React.FC = () => {
         }
       );
 
-      // Handle success
+      // Success
       alert("Project created successfully!");
       console.log("Response:", response.data);
     } catch (err) {
-      console.error("Error submitting the form:", err);
-      alert("Failed to submit the form. Please try again.");
+      if (axios.isAxiosError(err) && err.response) {
+        console.error("Response Error:", err.response.data);
+        alert(`Error: ${err.response.data.message || "Request failed"}`);
+      } else {
+        console.error("Error:", err);
+        alert("An unexpected error occurred.");
+      }
     }
   };
 
   return (
     <div className="sidebar">
-      <div className="form-con">
+      <div className="form-container">
         <h2>Create Project</h2>
         <form onSubmit={handleSubmit}>
           {/* Sector Type */}
           <div className="form-group">
-            <label htmlFor="sectorType">Sector Type</label>
+            <label htmlFor="sectorId">Sector Type</label>
             <select
-              name="sectorType"
-              id="sectorType"
-              value={formData.sectorType}
+              name="sectorId"
+              id="sectorId"
+              value={formData.sectorId}
               onChange={handleChange}
               required
             >
@@ -136,12 +150,12 @@ const CreateProject: React.FC = () => {
               {loading && <option>Loading sectors...</option>}
               {!loading && sectors.length > 0 ? (
                 sectors.map((sector) => (
-                  <option key={sector.id} value={sector.name}>
+                  <option key={sector.id} value={sector.id}>
                     {sector.name}
                   </option>
                 ))
               ) : (
-                <option>No sectors available</option>
+                <option disabled>No sectors available</option>
               )}
             </select>
             {error && <p className="error-message">{error}</p>}
@@ -196,7 +210,6 @@ const CreateProject: React.FC = () => {
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -210,7 +223,6 @@ const CreateProject: React.FC = () => {
               placeholder="Enter project status"
               value={formData.projectStatus}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -224,7 +236,6 @@ const CreateProject: React.FC = () => {
               placeholder="Enter SPG impact"
               value={formData.spgImpact}
               onChange={handleChange}
-              required
             />
           </div>
 

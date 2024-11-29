@@ -1,85 +1,155 @@
 .form-con {
-    width:600px;
-    max-width:900px;
-    position: relative;
-    top:300px;
-    left:350px;
-    padding: 0px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: transparent; /* Remove background color */
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px; /* Add padding to give space inside the container */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-  }
-  
-
-  .sidebar{
+.sidebar {
   position: relative;
-  left:0px;
-  top:100px;
+  top: 100px;
   background-image: url(/public/assets/school2.png);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #080808;
+}
+
+.form-group {
+  margin: 15px 0;
+  width: 100%;
+  max-width: 550px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #161515;
+}
+
+select,
+input[type="file"],
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  height: 120px;
+}
+
+button.submit-btn {
+  width: 100%;
+  max-width: 550px;
+  margin: 15px 0;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #363636;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button.submit-btn:hover {
+  background-color: #878f84d7;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+// Media queries for mobile responsiveness
+@media only screen and (max-width: 1024px) {
+  .form-con {
+    padding: 15px; /* Adjust padding */
   }
-  
+
   h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #080808;
+    font-size: 22px; /* Adjust header font size */
   }
-  
+
   .form-group {
-    margin-bottom:0px;
+    margin: 10px 0; /* Reduce margin */
   }
-  
-  label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #161515;
+
+  button.submit-btn {
+    font-size: 15px; /* Adjust button font size */
   }
-  
+}
+
+@media only screen and (max-width: 768px) {
+  .sidebar {
+    background-attachment: scroll; /* Remove fixed background on smaller screens */
+    top: 30px; /* Adjust spacing */
+  }
+
+  .form-con {
+    padding: 15px; /* Adjust padding */
+  }
+
+  h2 {
+    font-size: 20px; /* Smaller header */
+  }
+
+  .form-group {
+    margin: 10px 0; /* Adjust margin */
+  }
+
+  button.submit-btn {
+    font-size: 14px; /* Smaller button text */
+    padding: 10px; /* Adjust padding */
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .form-con {
+    padding: 10px; /* Reduce padding for very small screens */
+  }
+
+  h2 {
+    font-size: 18px; /* Smaller header for small screens */
+  }
+
+  .form-group {
+    margin: 5px 0; /* Adjust margin */
+  }
+
   select,
   input[type="file"],
   input[type="text"],
   input[type="number"],
   input[type="date"],
   textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
+    font-size: 12px; /* Adjust input text size */
+    padding: 8px; /* Adjust padding */
   }
-  
-  textarea {
-    resize: vertical;
-    height: 120px;
-  }
-  
+
   button.submit-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    background-color: #363636;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    font-size: 13px; /* Adjust button text size */
+    padding: 8px; /* Adjust padding */
   }
-  
-  button.submit-btn:hover {
-    background-color: #878f84d7;
-  }
-  
-  button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
-  
+}
