@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     
-    margin: 0;
+    margin:0px;
     padding-top:450px;
     display: flex;
     justify-content: center;
@@ -34,7 +34,8 @@ body {
       label {
         display: block;
         font-size: 0.9rem;
-        color: #555;
+        font-weight: bold;
+        color: #1f1d1d;
         margin-bottom: 5px;
       }
   
@@ -42,13 +43,14 @@ body {
       textarea {
         width: 100%;
         padding: 10px;
+        background-color: #dfac723b;
         font-size: 1rem;
         border: 1px solid #ccc;
         border-radius: 5px;
         transition: border-color 0.3s ease;
   
         &:focus {
-          border-color: #007bff;
+          border-color: #dbe1e7;
           outline: none;
         }
       }
@@ -61,7 +63,7 @@ body {
   
     button {
       width: 550px;
-      margin: 30px;
+      margin-left:0px;
       padding: 10px;
       font-size: 1rem;
       background-color: #363636;
@@ -72,7 +74,7 @@ body {
       transition: background-color 0.3s ease;
   
       &:hover {
-        background-color: #878f84d7;
+        background-color: #b8c2b4d7;
       }
     }
   

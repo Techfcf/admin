@@ -49,7 +49,7 @@ $heading-hover-color: #d4b112;
     width: 60%; /* Allow each box to use full width within its grid cell */
                 /* Prevent box from growing too wide */
     height:220px;
-    background-color:#ddffcb;
+    background-color:#d8c9753f;
     border: 1px solid $box-border-color;
     padding:5px;
     box-shadow: $box-shadow;
@@ -74,9 +74,10 @@ $heading-hover-color: #d4b112;
     }
 
     p {
-      margin: 10px;
+      margin: 30px;
       font-size: 14px;
-      color: rgb(45, 46, 45);
+      font-style:italic;
+      color: rgb(253, 255, 253);
       margin: 0 0 5px 0;
       font-weight: bold;
     }
@@ -84,7 +85,7 @@ $heading-hover-color: #d4b112;
     button {
       width: 100%;
       max-width:150px; /* Limit the button width */
-      padding:5px;
+      padding:10px;
       margin: 15px 0;
       font-size:15px;
       background-color: $button-bg-color;
@@ -96,7 +97,7 @@ $heading-hover-color: #d4b112;
      
 
       &:hover {
-        background-color: $button-hover-bg-color;
+        background-color: rgba(243, 220, 87, 0.911);
       }
     }
 

@@ -8,8 +8,8 @@ const FetchProject: React.FC = () => {
     sectorType: "",
     projectId: "",
   });
-  const [sectors, setSectors] = useState<string[]>([]); // Initialize as empty array
-  const [projects, setProjects] = useState<{ id: string; name: string }[]>([]); // Initialize as empty array
+  const [sectors, setSectors] = useState<{ id: string; sectorName: string; sectorDesc: string | null }[]>([]);
+  const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
   const [projectDetails, setProjectDetails] = useState<any>(null);
   const [kmlUrl, setKmlUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,17 +18,30 @@ const FetchProject: React.FC = () => {
   // Fetch sectors on component mount
   useEffect(() => {
     const fetchSectors = async () => {
-      try {
-        const response = await axios.get(
-          'https://backend.fitclimate.com/api/projects/fetch-all-sectors'
-        );
-        // Ensure sectors is set as an array
-        setSectors(response.data?.sectors || []); // Fallback to empty array if no sectors found
-      } catch (err) {
-        console.error("Error fetching sectors:", err);
-        setError("Failed to fetch sectors");
-      }
-    };
+  setLoading(true);
+  try {
+    const response = await axios.get(
+      "https://backend.fitclimate.com/api/projects/fetch-all-sectors"
+    );
+
+    if (response.data && Array.isArray(response.data)) {
+      const parsedSectors = response.data.map((sector: any) => ({
+        id: sector.id,
+        sectorName: sector.sectorName || "Unnamed Sector",
+        sectorDesc: sector.sectorDesc || null, // Add sectorDesc field
+      }));
+      setSectors(parsedSectors);
+    } else {
+      setSectors([]);
+    }
+  } catch (err) {
+    console.error("Error fetching sectors:", err);
+    setError("Failed to fetch sectors.");
+  } finally {
+    setLoading(false);
+  }
+};
+
     fetchSectors();
   }, []);
 
@@ -39,13 +52,19 @@ const FetchProject: React.FC = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `https://backend.fitclimate.com/api/projects/fetch-all-sectors=${formData.sectorType}`
+          `https://backend.fitclimate.com/api/projects/get-all-projects=${formData.sectorType}`
         );
-        // Ensure projects is set as an array
-        setProjects(response.data?.projects || []); // Fallback to empty array if no projects found
+        const fetchedProjects = response.data?.projects;
+
+        if (Array.isArray(fetchedProjects)) {
+          setProjects(fetchedProjects);
+        } else {
+          console.error("Unexpected response structure for projects:", response.data);
+          setError("Unexpected response from server while fetching projects.");
+        }
       } catch (err) {
         console.error("Error fetching projects:", err);
-        setError("Failed to fetch projects");
+        setError("Failed to fetch projects.");
       } finally {
         setLoading(false);
       }
@@ -59,13 +78,15 @@ const FetchProject: React.FC = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `https://backend.fitclimate.com/api/projects/fetch-all-sectors${formData.projectId}`
+          `https://backend.fitclimate.com/api/projects/get-all-projects?sectorId=${formData.projectId}`
         );
-        setProjectDetails(response.data?.projectDetails || null);
-        setKmlUrl(response.data?.kmlUrl || null);
+        const projectData = response.data;
+
+        setProjectDetails(projectData?.projectDetails || null);
+        setKmlUrl(projectData?.kmlUrl || null);
       } catch (err) {
         console.error("Error fetching project details:", err);
-        setError("Failed to fetch project details");
+        setError("Failed to fetch project details.");
       } finally {
         setLoading(false);
       }
@@ -92,7 +113,6 @@ const FetchProject: React.FC = () => {
   };
 
   return (
-    
     <div className="fetch-project">
       <div className="form-container">
         <h2>Fetch Project</h2>
@@ -107,18 +127,11 @@ const FetchProject: React.FC = () => {
               required
             >
               <option value="">-- Select Sector --</option>
-              {/* Safe mapping of sectors */}
-              {Array.isArray(sectors) && sectors.length > 0 ? (
-                sectors.map((sector, index) => (
-                  <option key={index} value={sector}>
-                    {sector}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  No sectors available
+              {sectors.map((sector) => (
+                <option key={sector.id} value={sector.sectorName}>
+                  {sector.sectorName}
                 </option>
-              )}
+              ))}
             </select>
           </div>
 
@@ -126,7 +139,7 @@ const FetchProject: React.FC = () => {
             {loading ? "Loading Projects..." : "Fetch Projects"}
           </button>
 
-          {projects.length > 0 ? (
+          {projects.length > 0 && (
             <div className="form-group">
               <label htmlFor="projectId">Select Project</label>
               <select
@@ -144,8 +157,6 @@ const FetchProject: React.FC = () => {
                 ))}
               </select>
             </div>
-          ) : (
-            <p>No projects available for the selected sector.</p>
           )}
         </form>
 
@@ -155,13 +166,13 @@ const FetchProject: React.FC = () => {
           <div className="project-details">
             <h3>Project Details</h3>
             <p>
-              <strong>Description:</strong> {projectDetails.description}
+              <strong>Description:</strong> {projectDetails.description || "N/A"}
             </p>
             <p>
-              <strong>Start Date:</strong> {projectDetails.startDate}
+              <strong>Start Date:</strong> {projectDetails.startDate || "N/A"}
             </p>
             <p>
-              <strong>Status:</strong> {projectDetails.status}
+              <strong>Status:</strong> {projectDetails.status || "N/A"}
             </p>
           </div>
         )}
