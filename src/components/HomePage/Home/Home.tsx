@@ -86,15 +86,15 @@ const Home: React.FC = () => {
             <h3>Latest News</h3>
             <ul>
               <li>
-                <img src="public/assets/r3.jpg" alt="News 1" />
+                <img src="assets/r3.jpg" alt="News 1" />
                 <p>North Meets South!</p>
               </li>
               <li>
-                <img src="public/assets/r2.jpg" alt="News 2" />
+                <img src="assets/r2.jpg" alt="News 2" />
                 <p>Our experience with Clean Cookstove projects</p>
               </li>
               <li>
-                <img src="public/assets/hj.jpg" alt="News 3" />
+                <img src="assets/hj.jpg" alt="News 3" />
                 <p>Way to Neutrality</p>
               </li>
             </ul>
@@ -116,9 +116,9 @@ const Home: React.FC = () => {
               Industrial Area, New Delhi, 110044 (India)
             </address>
             <div className="social-icons">
-              <a href=""><img src="public/assets/dh.png" alt="Facebook" /></a>
-              <a href="https://x.com/home"><img src="public/assets/dhg.png" alt="Twitter" /></a>
-              <a href="https://www.facebook.com/p/FCF-India-100093362305578/?_rdr"><img src="public/assets/download.jpeg" alt="LinkedIn" /></a>
+              <a href=""><img src="assets/dh.png" alt="Facebook" /></a>
+              <a href="https://x.com/home"><img src="assets/dhg.png" alt="Twitter" /></a>
+              <a href="https://www.facebook.com/p/FCF-India-100093362305578/?_rdr"><img src="assets/download.jpeg" alt="LinkedIn" /></a>
             </div>
           </div>
         </div>
