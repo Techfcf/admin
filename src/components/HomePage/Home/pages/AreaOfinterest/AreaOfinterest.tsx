@@ -10,7 +10,7 @@ interface MapComponentProps {
 
 const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [drawingManager, setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
+  // const [ setDrawingManager] = useState<google.maps.drawing.DrawingManager | null>(null);
   const [shapes, setShapes] = useState<google.maps.Polygon | google.maps.Rectangle | null>(null);
   const [kmlData, setKmlData] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -47,7 +47,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
 
       drawingManagerInstance.setMap(mapInstance);
       setMap(mapInstance);
-      setDrawingManager(drawingManagerInstance);
+      // setDrawingManager(drawingManagerInstance);
 
       googleMaps.event.addListener(drawingManagerInstance, 'overlaycomplete', (event: any) => {
         if (shapes) {

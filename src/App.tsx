@@ -9,7 +9,8 @@ import MainComponent from './components/HomePage/Home/pages/AreaOfinterest/AreaO
 import SectorForm from './components/HomePage/Home/pages/CreateSector/createsector';
 import OrthoMosaicImage from './components/HomePage/Home/pages/orthomoasicimage/orthomoasicimage';
 import CreateProject from './components/HomePage/Home/pages/CreateProject/CreateProject';
-import FetchProject from './components/HomePage/Home/pages/FetchProject/fetchproject';
+import FetchProject from './components/HomePage/Home/pages/FetchProject/FetchProject';
+
 
 const App = () => {
   return (
