@@ -13,9 +13,9 @@ const Navbar = () => {
   return (
     <div className='navbar'>
       <div className="navbar_left">
-      <a className="navbar-brand" href="https://fitclimate.com/">
-          <img src="./assets/new_logo.png" alt="" width="120" height="80" className="d-inline-block align-text-top" />
-      </a>
+      <a className="navbar-brand" >
+    <img src="./assets/new_logo.png" alt="" width="120" height="80" className="d-inline-block align-text-top" />
+</a>
       </div>
       <div className="navbar_right">
         <div className='right_group'>

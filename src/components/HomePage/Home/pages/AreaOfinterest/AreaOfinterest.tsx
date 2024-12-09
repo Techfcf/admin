@@ -68,12 +68,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
 
   const handleFileSubmit = async () => {
     const file = fileInputRef.current?.files?.[0];
-
+  
     if (!file) {
       alert('Please upload a file.');
       return;
     }
-
+  
+    onFileUpload(file); // Trigger the callback to pass the file to the parent component
+  
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     if (fileExtension === 'kml') {
       handleKMLFile(file);
@@ -85,6 +87,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
       alert('Unsupported file format. Please upload a KML, GeoJSON, or ZIP file.');
     }
   };
+  
 
   const handleKMLFile = (file: File) => {
     const reader = new FileReader();
@@ -239,7 +242,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
   };
 
   return (
-    <div>
+    <div  className='main'>
       <div id="uploadAOI" className="tabcontent">
         <form action="/analytics/uploadShp" id="uploadAOIForm" encType="multipart/form-data" method="POST">
           <h1>Area Of Interest</h1>
@@ -253,7 +256,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
           </ul>
         </form>
       </div>
-      <input type="file" ref={fileInputRef} accept=".kml,.geojson,.zip" />
+      <label htmlFor="fileInput">Upload AOI File:</label>
+<input
+  id="fileInput"
+  type="file"
+  ref={fileInputRef}
+  accept=".kml,.geojson,.zip"
+  aria-label="Upload a KML, GeoJSON, or ZIP file"
+/>
       <button onClick={handleFileSubmit} className="upload-btn">
         Upload File
       </button>
@@ -266,8 +276,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onFileUpload }) => {
         </button>
       )}
 
-      <div id="map" style={{ height: '500px', width: '100%' }}></div>
-    </div>
+           <div id="map" className="map-container"></div>    </div>
   );
 };
 

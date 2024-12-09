@@ -5,22 +5,22 @@ import "./CreateProject.scss";
 const CreateProject: React.FC = () => {
   const [formData, setFormData] = useState<{
     name: string;
-    sectorId: string; // To store sector ID
+    sectorId: number;
     kmlFile: File | null;
-    projectDescription: string;
-    projectArea: number;
+    projectDesc: string; // Changed from description to projectDesc
+    area: number;
     startDate: string;
-    projectStatus: string;
-    spgImpact: string;
+    status: string;
+    impact: string;
   }>({
     name: "",
-    sectorId: "",
+    sectorId: 12345,
     kmlFile: null,
-    projectDescription: "",
-    projectArea: 0,
+    projectDesc: "",
+    area: 0,
     startDate: "",
-    projectStatus: "",
-    spgImpact: "",
+    status: "",
+    impact: "",
   });
 
   const [sectors, setSectors] = useState<{ id: string; name: string }[]>([]);
@@ -96,11 +96,11 @@ const CreateProject: React.FC = () => {
       // Append the project details
       const projectData = {
         name: formData.name,
-        area: formData.projectArea,
-        status: formData.projectStatus || null,
-        impact: formData.spgImpact || null,
-        sectorId: Number(formData.sectorId), // Convert to number for API
-        projectDesc: formData.projectDescription,
+        area: formData.area,
+        status: formData.status,
+        impact: formData.impact,
+        sectorId: formData.sectorId, // Convert sectorId to a number
+        projectDesc: formData.projectDesc,
         startDate: formData.startDate || null,
       };
 
@@ -160,6 +160,17 @@ const CreateProject: React.FC = () => {
             </select>
             {error && <p className="error-message">{error}</p>}
           </div>
+          <div className="form-group">
+            <label htmlFor="name">Project Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter project name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
 
           {/* File Upload */}
           <div className="form-group">
@@ -176,12 +187,12 @@ const CreateProject: React.FC = () => {
 
           {/* Project Description */}
           <div className="form-group">
-            <label htmlFor="projectDescription">Project Description</label>
+            <label htmlFor="projectDesc">Project Description</label>
             <textarea
-              name="projectDescription"
-              id="projectDescription"
+              name="projectDesc"
+              id="projectDesc"
               placeholder="Enter project description"
-              value={formData.projectDescription}
+              value={formData.projectDesc}
               onChange={handleChange}
               required
             />
@@ -189,13 +200,13 @@ const CreateProject: React.FC = () => {
 
           {/* Project Area */}
           <div className="form-group">
-            <label htmlFor="projectArea">Project Area (in sq km)</label>
+            <label htmlFor="area">Project Area (in sq km)</label>
             <input
               type="number"
-              id="projectArea"
-              name="projectArea"
+              id="area"
+              name="area"
               placeholder="Enter project area"
-              value={formData.projectArea}
+              value={formData.area}
               onChange={handleChange}
               required
             />
@@ -215,26 +226,26 @@ const CreateProject: React.FC = () => {
 
           {/* Project Status */}
           <div className="form-group">
-            <label htmlFor="projectStatus">Project Status</label>
+            <label htmlFor="status">Project Status</label>
             <input
               type="text"
-              id="projectStatus"
-              name="projectStatus"
+              id="status"
+              name="status"
               placeholder="Enter project status"
-              value={formData.projectStatus}
+              value={formData.status}
               onChange={handleChange}
             />
           </div>
 
           {/* SPG Impact */}
           <div className="form-group">
-            <label htmlFor="spgImpact">SPG Impact</label>
+            <label htmlFor="impact">SPG Impact</label>
             <input
               type="text"
-              id="spgImpact"
-              name="spgImpact"
+              id="impact"
+              name="impact"
               placeholder="Enter SPG impact"
-              value={formData.spgImpact}
+              value={formData.impact}
               onChange={handleChange}
             />
           </div>

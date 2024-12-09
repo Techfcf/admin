@@ -1,61 +1,94 @@
+.main{
+  padding: 0px;
+  margin: 0px;
+}
 .tabcontent {
-    padding:10px;
-    top: 0%;
-    background-color: #776565;
-    margin:0px 0;
+  padding: 10px;
+  background-color: #776565;
+  margin: 0;
   
-    h1 {
-      text-align: center;
-    }
+  h1 {
+    text-align: center;
   }
-  
-  .upload-btn,
-  .generate-btn,
-  .download-btn {
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  
-    &.upload-btn {
-      background-color: #4caf50;
-      color: white;
-    }
-  
-    &.generate-btn {
-      background-color: #2196f3;
-      color: white;
-    }
-  
-    &.download-btn {
-      background-color: #f44336;
-      color: white;
-    }
+}
+
+.map-container {
+  height: 500px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    height: 300px; // Adjust map height on smaller screens
   }
+}
+
+.upload-btn,
+.generate-btn,
+.download-btn {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block; // Allows buttons to be responsive
   
-  #map {
-    height: 500px;
-    width: 100%;
-  }
-  
-  .accordion-button {
-    background-color: #5d5d5d;
+  &.upload-btn {
+    background-color: #4caf50;
     color: white;
   }
-  
-  .accordion-collapse {
-    background-color: #4d4d4d;
-  }
-  
-  .form-div {
-    background: linear-gradient(#5d5d5d, rgb(113, 135, 137));
+
+  &.generate-btn {
+    background-color: #2196f3;
     color: white;
-    padding: 0px;
-    height: 100%;
   }
-  
-  .accordion-item {
-    margin-bottom: 10px;
+
+  &.download-btn {
+    background-color: #f44336;
+    color: white;
   }
-  
+
+  @media (max-width: 768px) {
+    padding: 8px 15px; // Smaller padding for mobile
+    font-size: 14px; // Adjust font size for smaller screens
+  }
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    height: 300px; // Adjust map height on smaller screens
+  }
+}
+
+.accordion-button {
+  background-color: #5d5d5d;
+  color: white;
+
+  @media (max-width: 768px) {
+    font-size: 14px; // Adjust font size for mobile
+  }
+}
+
+.accordion-collapse {
+  background-color: #4d4d4d;
+}
+
+.form-div {
+  background: linear-gradient(#5d5d5d, rgb(113, 135, 137));
+  color: white;
+  padding: 0px;
+  height: 100%;
+
+  @media (max-width: 768px) {
+    padding: 20px; // Add padding on smaller screens
+  }
+}
+
+.accordion-item {
+  margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 5px; // Adjust spacing on mobile
+  }
+}
