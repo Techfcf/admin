@@ -117,7 +117,7 @@ const Home: React.FC = () => {
             </address>
             <div className="social-icons">
               <a href=""><img src="/assets/dh.png" alt="Facebook" /></a>
-              <a href="https://x.com/home"><img src="c/assets/dhg.png" alt="Twitter" /></a>
+              <a href="https://x.com/home"><img src="/assets/dhg.png" alt="Twitter" /></a>
               <a href="https://www.facebook.com/p/FCF-India-100093362305578/?_rdr"><img src="/assets/download.jpeg" alt="LinkedIn" /></a>
             </div>
           </div>
