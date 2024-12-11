@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./createsector.scss";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const SectorForm: React.FC = () => {
+import "./createsector.scss"; // Updated SCSS file name to match the new class name
+
+const CreateSectorForm: React.FC = () => {
   const [formData, setFormData] = useState({ name: "", description: "" });
-  const [loading, setLoading] = useState(false); // Track loading state
-  const [error, setError] = useState<string | null>(null); // Track error message
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize the navigation hook
 
-  // Handle input changes
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -15,15 +18,14 @@ const SectorForm: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Start loading
-    setError(null); // Clear previous errors
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await axios.post(
-        'https://backend.fitclimate.com/api/projects/sector-type',
+        "https://backend.fitclimate.com/api/projects/sector-type",
         {
           sectorName: formData.name,
           sectorDesc: formData.description,
@@ -36,9 +38,8 @@ const SectorForm: React.FC = () => {
       if (response.status === 200 || response.status === 201) {
         alert("Sector created successfully!");
         console.log("Created sector:", response.data);
-
-        // Reset the form
         setFormData({ name: "", description: "" });
+        navigate("/CreateProject");
       } else {
         throw new Error(`Unexpected response status: ${response.status}`);
       }
@@ -51,16 +52,16 @@ const SectorForm: React.FC = () => {
       );
       alert(`Error: ${error.response?.data?.message || error.message}`);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <div className="sidebar">
-      <div className="form-container">
+    <div className="create-sector-form">
+      <div className="create-sector-form__container">
         <h2>Create Sector</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="create-sector-form__group">
             <label htmlFor="name">Sector Name</label>
             <input
               type="text"
@@ -72,7 +73,7 @@ const SectorForm: React.FC = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="create-sector-form__group">
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -87,10 +88,10 @@ const SectorForm: React.FC = () => {
             {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="create-sector-form__error">{error}</p>}
       </div>
     </div>
   );
 };
 
-export default SectorForm;
+export default CreateSectorForm;

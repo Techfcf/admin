@@ -1,37 +1,40 @@
 body {
-    font-family: Arial, sans-serif;
-    
-    margin:0px;
-    padding-top:450px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh;
-  }
-  
-  .form-container {
-    padding:30px;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex; /* Enables Flexbox for centering */
+  justify-content: center; /* Horizontally centers the form */
+  align-items: center; /* Vertically centers the form */
+  min-height: 100vh; /* Makes the body take full viewport height */
+  background-image: url("/assets/school2.png"); /* Background image */
+  background-size: cover; /* Ensures the background covers the entire screen */
+  background-position: center; /* Centers the background image */
+  background-attachment: fixed; /* Keeps the background fixed while scrolling */
+  background-repeat: no-repeat; /* Prevents the background from repeating */
+}
+
+.create-sector-form {
+  &__container {
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width:800px;
-    max-height:500px;
-    margin-top: 100px;
-    width:600px;
+    width: 90%; /* Default width for responsiveness */
+    max-width: 600px; /* Restrict maximum width */
+    background-color: #f3ecec18; /* Add background for better visibility */
+    margin: 20px auto; /* Center the container */
     position: relative;
-    top:300px;
-    left:450px;
+    top: -40px; /* Shift up by 30px */
+    left: -60px; /* Shift left by 30px */
 
-  
     h2 {
-      margin-bottom:-14px;
+      margin-bottom: 20px;
       font-size: 1.5rem;
       color: #141414;
       text-align: center;
     }
-  
-    .form-group {
-      margin-bottom:10px;
-  
+
+    &__group {
+      margin-bottom: 15px;
+
       label {
         display: block;
         font-size: 0.9rem;
@@ -39,32 +42,31 @@ body {
         color: #1f1d1d;
         margin-bottom: 5px;
       }
-  
+
       input,
       textarea {
-        width: 100%;
+        width: 100%; /* Full width of the container */
         padding: 10px;
         background-color: #dfac723b;
         font-size: 1rem;
         border: 1px solid #ccc;
         border-radius: 5px;
         transition: border-color 0.3s ease;
-  
+
         &:focus {
           border-color: #dbe1e7;
           outline: none;
         }
       }
-  
+
       textarea {
         resize: vertical;
         min-height: 100px;
       }
     }
-  
+
     button {
-      width: 550px;
-      margin-left:0px;
+      width: 100%; /* Button takes full width */
       padding: 10px;
       font-size: 1rem;
       background-color: #363636;
@@ -73,27 +75,74 @@ body {
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
-  
+
       &:hover {
         background-color: #b8c2b4d7;
       }
     }
-  
-    @media (max-width: 480px) {
+
+    &__error {
+      color: red;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* Media query for tablets and smaller screens */
+    @media (max-width: 768px) {
+      padding: 20px;
+      width: 100%; /* Full width */
+      max-width: 90%; /* Adjust maximum width */
+      top: -30px; /* Adjust top offset */
+      left: -40px; /* Adjust left offset */
+      
       h2 {
         font-size: 1.2rem;
       }
-  
-      .form-group {
+
+      &__group {
+        label {
+          font-size: 0.85rem;
+        }
+
         input,
         textarea {
           font-size: 0.9rem;
         }
       }
-  
+
       button {
         font-size: 0.9rem;
+        padding: 8px;
+      }
+    }
+
+    /* Media query for very small screens */
+    @media (max-width: 480px) {
+      padding: 15px;
+      width: 100%; /* Full width */
+      max-width: 100%; /* No maximum width */
+      top: -10px; /* Adjust top offset */
+      left: -10px; /* Adjust left offset */
+      
+      h2 {
+        font-size: 1.1rem;
+      }
+
+      &__group {
+        label {
+          font-size: 0.8rem;
+        }
+
+        input,
+        textarea {
+          font-size: 0.85rem;
+        }
+      }
+
+      button {
+        font-size: 0.85rem;
+        padding: 6px;
       }
     }
   }
-  
+}

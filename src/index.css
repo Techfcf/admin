@@ -2,12 +2,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,7 +17,7 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow-x:hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden; /* Prevent horizontal scroll */
   overflow-y: auto; /* Allow vertical scroll if necessary */
 }
 
@@ -29,8 +26,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 320px;
-  min-height: 100vh;
+  min-width: 1500px;
+  min-height: 0;
   box-sizing: border-box;
 }
 
@@ -46,6 +43,7 @@ a:hover {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  margin: 0.5em 0; /* Add some margin for spacing */
 }
 
 button {
@@ -56,17 +54,20 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
+  color: #fff; /* Ensure contrast for readability */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s;
 }
 button:hover {
   border-color: #646cff;
+  background-color: #333; /* Slightly different color on hover */
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Light mode adjustments */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -77,15 +78,43 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+    color: #000; /* Ensure contrast for light mode */
   }
 }
 
+/* Responsive adjustments for medium screens (768px and up) */
 @media (max-width: 768px) {
-  /* Adjust for smaller screens */
   h1 {
     font-size: 2em;
+    margin: 0.5em 0; /* Adjust for smaller screens */
   }
   button {
     padding: 0.4em 0.8em;
+    font-size: 0.9em; /* Slightly smaller font for buttons */
+  }
+}
+
+/* Responsive adjustments for small screens (480px and up) */
+@media (max-width: 480px) {
+  body {
+    min-width: 100%; /* Allow full width on smaller screens */
+  }
+  h1 {
+    font-size: 1.5em; /* Further reduce the heading size */
+  }
+  button {
+    padding: 0.4em 0.6em;
+    font-size: 0.8em; /* Make buttons more compact */
+  }
+}
+
+/* Additional adjustments for very small screens (320px and up) */
+@media (max-width: 320px) {
+  h1 {
+    font-size: 1.2em; /* Ensure readability on very small screens */
+  }
+  button {
+    padding: 0.4em 0.5em; /* Adjust padding for small screens */
+    font-size: 0.75em; /* Reduce font size further */
   }
 }

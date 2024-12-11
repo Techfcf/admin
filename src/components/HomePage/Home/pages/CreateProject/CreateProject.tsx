@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CreateProject.scss";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 const CreateProject: React.FC = () => {
   const [formData, setFormData] = useState<{
     name: string;
     sectorId: number;
     kmlFile: File | null;
-    projectDesc: string; // Changed from description to projectDesc
+    projectDesc: string;
     area: number;
     startDate: string;
     status: string;
@@ -26,6 +28,8 @@ const CreateProject: React.FC = () => {
   const [sectors, setSectors] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize the navigation hook
+
 
   // Fetch sectors from API
   useEffect(() => {
@@ -99,7 +103,7 @@ const CreateProject: React.FC = () => {
         area: formData.area,
         status: formData.status,
         impact: formData.impact,
-        sectorId: formData.sectorId, // Convert sectorId to a number
+        sectorId: formData.sectorId,
         projectDesc: formData.projectDesc,
         startDate: formData.startDate || null,
       };
@@ -120,6 +124,7 @@ const CreateProject: React.FC = () => {
       // Success
       alert("Project created successfully!");
       console.log("Response:", response.data);
+      navigate("/FetchProject");
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         console.error("Response Error:", err.response.data);
@@ -132,12 +137,12 @@ const CreateProject: React.FC = () => {
   };
 
   return (
-    <div className="sidebar">
-      <div className="form-container">
+    <div className="create-project-sidebar">
+      <div className="create-project-form-container">
         <h2>Create Project</h2>
         <form onSubmit={handleSubmit}>
           {/* Sector Type */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="sectorId">Sector Type</label>
             <select
               name="sectorId"
@@ -158,9 +163,9 @@ const CreateProject: React.FC = () => {
                 <option disabled>No sectors available</option>
               )}
             </select>
-            {error && <p className="error-message">{error}</p>}
+            {error && <p className="create-project-error-message">{error}</p>}
           </div>
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="name">Project Name</label>
             <input
               type="text"
@@ -173,7 +178,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* File Upload */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="kmlFile">Upload KML File</label>
             <input
               type="file"
@@ -186,7 +191,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* Project Description */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="projectDesc">Project Description</label>
             <textarea
               name="projectDesc"
@@ -199,7 +204,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* Project Area */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="area">Project Area (in sq km)</label>
             <input
               type="number"
@@ -213,7 +218,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* Start Date */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="startDate">Start Date</label>
             <input
               type="date"
@@ -225,7 +230,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* Project Status */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="status">Project Status</label>
             <input
               type="text"
@@ -238,7 +243,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* SPG Impact */}
-          <div className="form-group">
+          <div className="create-project-form-group">
             <label htmlFor="impact">SPG Impact</label>
             <input
               type="text"
@@ -251,7 +256,7 @@ const CreateProject: React.FC = () => {
           </div>
 
           {/* Submit Button */}
-          <button type="submit" className="submit-btn">
+          <button type="submit" className="create-project-submit-btn">
             Submit
           </button>
         </form>

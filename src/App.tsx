@@ -12,10 +12,12 @@ import CreateProject from './components/HomePage/Home/pages/CreateProject/Create
 import FetchProject from './components/HomePage/Home/pages/FetchProject/FetchProject';
 
 
+
 const App = () => {
   return (
     <Router>
       <Routes>
+      
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />

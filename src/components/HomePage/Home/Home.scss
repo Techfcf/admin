@@ -1,14 +1,3 @@
-/* Variables */
-$sidebar-bg-color: #055a5a9c;
-$box-bg-color: #f9f9f9;
-$box-border-color: #ddd;
-$box-shadow: 0px 2px 4px rgba(4, 47, 65, 0.1), 0px 5px 15px rgba(5, 68, 68, 0.2);
-$hover-box-shadow: 0px 4px 8px rgba(5, 29, 43, 0.15), 0px 8px 25px rgba(0, 0, 0, 0.3);
-$button-bg-color: #241d1d;
-$heading-color: #f5f7f3;
-$footer-bg-color: #1a1a1a;
-$highlight-color: #4caf50;
-
 /* General Styles */
 body {
   margin: 0;
@@ -16,68 +5,73 @@ body {
 }
 
 /* Sidebar styles */
-.sidebar {
+.sidebar-container {
   background-image: url('/public/assets/school2.png');
   background-size: cover;
   background-position: center;
-  background-color: $sidebar-bg-color;
+  background-color: #055a5a9c;
   background-attachment: fixed;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid layout */
-  gap: 20px;
-  padding:10px;
-  margin-top:140px;
+  grid-template-columns: repeat(3, 0.3fr); /* 3 columns for large screens */
+  grid-template-rows: repeat(2, auto); /* 2 rows */
+  gap: 10px; /* Gap between boxes */
+  padding: 80px; /* Padding around the container */
+  margin-top:500px;
   box-sizing: border-box;
+  
 
-  .h1 {
+  .sidebar-title {
+    grid-column: span 3; /* Title spans across all 3 columns */
     font-size: 2rem;
     text-align: center;
-    left: 300px;
-    color: $heading-color;
+    color: #f5f7f3;
     margin-bottom: 10px;
+    transition: color 0.3s ease;
 
     &:hover {
-      color: $highlight-color;
+      color: #fdff88;
     }
   }
 
-  .box {
-    background-color: $box-bg-color;
-    border: 1px solid $box-border-color;
-    padding: 20px;
-    box-shadow: $box-shadow;
-    border-radius: 10px;
+  .service-box {
+    background-color: #ddd66f3f;
+    border: 1px solid #ddd;
+    padding: 10px; /* Reduced padding */
+    box-shadow: 0px 2px 4px rgba(4, 47, 65, 0.1), 0px 5px 15px rgba(5, 68, 68, 0.2);
+    border-radius: 8px; /* Slightly smaller border radius */
     text-align: center;
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.1s ease; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 300px;
-    height: 200px;
+    width: 100%;
+    max-width:300px; /* Reduced max width */
+    height: auto;
 
     &:hover {
-      box-shadow: $hover-box-shadow;
+      box-shadow: 0px 4px 8px rgba(5, 29, 43, 0.15), 0px 8px 25px rgba(0, 0, 0, 0.3);
     }
 
     img {
-      width:20px;
-      height:20px;
+      width: 35px; /* Reduced image size */
+      height: 35px;
       border-radius: 5px;
-      margin-bottom:0px;
+      margin-bottom: 8px; /* Reduced margin */
     }
 
     p {
-      margin:0px 0;
-      font-size: 0.8rem;
-      color: #333;
+      margin: 0 0 8px 0; /* Reduced margin */
+      font-size: 0.9rem; /* Reduced font size */
+      color: #ffffff;
+    
     }
 
     button {
       width: 100%;
-      max-width: 200px;
-      padding: 10px;
-      font-size: 1rem;
-      background-color: $button-bg-color;
+      max-width: 180px; /* Reduced max width */
+      padding: 8px; /* Reduced padding */
+      font-size: 0.9rem; /* Reduced font size */
+      background-color: #241d1d;
       color: white;
       border: none;
       border-radius: 5px;
@@ -85,39 +79,40 @@ body {
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: $highlight-color;
+        background-color: #f1c73b34;
       }
     }
   }
 }
 
 /* Footer styles */
-.footer {
-  background-color: $footer-bg-color;
+.footer-container {
+  background-color: #1a1a1a;
   color: white;
-  padding: 20px 40px;
+  padding: 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  box-sizing: border-box;
 
-  .footer-section {
-    width: 100%;
-    height:330px;
-    margin-top:60px;
+  .footer-content {
+    width:90%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap:5px;
   }
 
   .footer-column {
     flex: 1;
+    min-width:200px;
     margin: 10px;
-    min-width: 250px;
 
     h3 {
-      border-bottom: 2px solid $highlight-color;
+      border-bottom: 2px solid #4caf50;
       padding-bottom: 5px;
       margin-bottom: 15px;
+      font-size: 1.2rem;
     }
 
     ul {
@@ -138,6 +133,7 @@ body {
 
         p {
           color: #ddd;
+          font-size: 0.9rem;
         }
 
         a {
@@ -145,7 +141,7 @@ body {
           color: white;
 
           &:hover {
-            color: $highlight-color;
+            color: #4caf50;
             transition: color 0.3s ease;
           }
         }
@@ -179,57 +175,53 @@ body {
   }
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  .sidebar {
-    grid-template-columns: 1fr; /* Single column for tablets and smaller devices */
-    padding: 20px;
-  }
-
-  .box {
-    width: 100%;
-  }
-
-  .h1 {
-    font-size: 1.5rem;
-  }
-
-  .footer {
-    padding: 10px;
-    .footer-section {
-      flex-direction: column;
-    }
-  }
-}
-
 @media (max-width: 480px) {
-  .sidebar {
-    padding: 10px;
-
-    .box {
-      button {
-        font-size: 0.9rem;
-        padding: 8px;
-      }
-
-      img {
-        width: 80px;
-        height: 40px;
-      }
-    }
-
-    .h1 {
-      font-size: 1.2rem;
-    }
+  .sidebar-container {
+    display: flex;
+    flex-direction: column; /* Stack service boxes vertically */
+    align-items: center; /* Center-align the content */
+    padding: 10px; /* Add padding for spacing */
+    gap: 15px; /* Add space between service boxes */
   }
 
-  .footer {
-    .footer-column {
-      text-align: center;
-    }
+  .service-box {
+    width: 90%; /* Make the box take most of the screen width */
+    max-width: 400px; /* Set a reasonable maximum width */
+    padding: 15px; /* Add padding for spacing inside */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #ddd66f3f; /* Maintain consistent background color */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    align-items: center; /* Center-align content */
+    text-align: center; /* Ensure text is centered */
+  }
 
-    .footer-section {
-      justify-content: center;
+  .service-box img {
+    width: 60px; /* Set an appropriate size for the image */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Add space below the image */
+  }
+
+  .service-box p {
+    font-size: 0.9rem; /* Ensure readability on smaller screens */
+    line-height: 1.4; /* Improve line spacing */
+    margin-bottom: 10px; /* Space between text and button */
+    color: #ffffff; /* Keep text color visible */
+  }
+
+  .service-box button {
+    font-size: 1rem; /* Ensure buttons are touch-friendly */
+    padding: 10px 20px; /* Comfortable padding for buttons */
+    border-radius: 5px; /* Rounded buttons */
+    border: none; /* Remove button border */
+    background-color: #241d1d; /* Button background color */
+    color: white; /* Button text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #f1c73b34; /* Adjust hover effect */
     }
   }
 }

@@ -8,8 +8,7 @@ body, html {
 }
 
 body {
-  scrollbar-width: thin; /* For Firefox */
-  overflow-y: scroll; /* To always show a scrollbar even if the content doesn't overflow */
+  overflow-y: scroll; /* Ensures scrollbar is always visible */
 }
 
 body::-webkit-scrollbar {

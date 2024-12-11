@@ -1,9 +1,66 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import * as toGeoJSON from "@tmcw/togeojson";
+import { GeoJSON as LeafletGeoJSON } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import "./FetchProject.scss";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
+// KMLLayer Component
+const KMLLayer: React.FC<{ url: string }> = ({ url }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const loadKML = async () => {
+      try {
+        const response = await axios.get(url, { responseType: "blob" });
+        const file = response.data;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const kmlText = reader.result as string;
+            const parser = new DOMParser();
+            const kml = parser.parseFromString(kmlText, "text/xml");
+            const geoJSON = toGeoJSON.kml(kml);
+
+            // Remove existing GeoJSON layers
+            map.eachLayer((layer) => {
+              if (layer instanceof LeafletGeoJSON) {
+                map.removeLayer(layer);
+              }
+            });
+
+            // Add GeoJSON layer
+            const geoJsonLayer = new LeafletGeoJSON(geoJSON, {
+              onEachFeature: (feature, layer) => {
+                if (feature.properties?.name) {
+                  layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+                }
+              },
+            });
+
+            geoJsonLayer.addTo(map);
+            map.fitBounds(geoJsonLayer.getBounds());
+          } catch (error) {
+            console.error("Error parsing KML to GeoJSON:", error);
+          }
+        };
+
+        reader.readAsText(file);
+      } catch (error) {
+        console.error("Error loading KML:", error);
+      }
+    };
+
+    loadKML();
+  }, [url, map]);
+
+  return null;
+};
+
+// FetchProject Component
 const FetchProject: React.FC = () => {
   interface Sector {
     id: string;
@@ -14,15 +71,12 @@ const FetchProject: React.FC = () => {
   interface Project {
     id: number;
     name: string;
-    createdAt?: string;
-    updatedAt?: string;
     filePath?: string;
     projectDesc?: string;
     area?: number;
     startDate?: string;
     status?: string | null;
     impact?: string;
-    sectorId: string;
   }
 
   const [formData, setFormData] = useState({
@@ -32,9 +86,11 @@ const FetchProject: React.FC = () => {
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectDetails, setProjectDetails] = useState<Project | null>(null);
-  const [geoJsonData, setGeoJsonData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use the useNavigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSectors = async () => {
@@ -47,7 +103,7 @@ const FetchProject: React.FC = () => {
       } catch (err: any) {
         setError(
           err.response?.data?.message ||
-            "An error occurred while fetching sectors."
+          "An error occurred while fetching sectors."
         );
       } finally {
         setLoading(false);
@@ -73,7 +129,7 @@ const FetchProject: React.FC = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          "An error occurred while fetching projects."
+        "An error occurred while fetching projects."
       );
     } finally {
       setLoading(false);
@@ -85,47 +141,25 @@ const FetchProject: React.FC = () => {
       setError("Please select a project.");
       return;
     }
-  
+
     setLoading(true);
     setError(null);
-  
+
     try {
-      // Fetch project details
       const response = await axios.get<Project>(
         `https://backend.fitclimate.com/api/projects/${formData.projectId}`
       );
       setProjectDetails(response.data);
-  
-      if (response.data.filePath) {
-        const decodedFilePath = decodeURIComponent(response.data.filePath);
-  
-        // Use proxy to bypass CORS
-        const kmlResponse = await fetch(`http://localhost:5000/proxy?url=${decodedFilePath}`);
-        if (!kmlResponse.ok) {
-          throw new Error(`Failed to fetch KML file: ${kmlResponse.statusText}`);
-        }
-  
-        const kmlText = await kmlResponse.text();
-  
-        // Parse and convert KML to GeoJSON
-        const parser = new DOMParser();
-        const kmlDoc = parser.parseFromString(kmlText, "application/xml");
-        const converted = toGeoJSON.kml(kmlDoc);
-  
-        setGeoJsonData(converted);
-      }
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          err.message ||
-          `Failed to fetch details for project ${formData.projectId}.`
+        err.message ||
+        `Failed to fetch details for project ${formData.projectId}.`
       );
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -135,21 +169,23 @@ const FetchProject: React.FC = () => {
       setProjects([]);
       setFormData((prev) => ({ ...prev, projectId: "" }));
       setProjectDetails(null);
-      setGeoJsonData(null);
     }
   };
 
-  const handleButtonClick = () => {
-    if (formData.projectId) {
-      fetchProjectDetails();
-    } else {
-      alert("Please select a project first!");
-    }
+  // Function to navigate to the home page
+  const navigateHome = () => {
+    navigate("/"); // Replace "/" with your homepage route if different
   };
 
   return (
-    <div className="fetch-project">
-      <div className="form-container">
+    <div className="fetchs">
+      {/* Button to navigate to the home page */}
+      <button className="home-button" onClick={navigateHome}>
+        Home
+      </button>
+  
+      {/* Form Section */}
+      <div className="forms">
         <h2>Fetch Project</h2>
         <form
           onSubmit={(e) => {
@@ -157,7 +193,7 @@ const FetchProject: React.FC = () => {
             fetchProjects();
           }}
         >
-          <div className="form-group">
+          <div className="group">
             <label htmlFor="sectorType">Sector Type</label>
             <select
               name="sectorType"
@@ -178,9 +214,9 @@ const FetchProject: React.FC = () => {
             {loading ? "Loading..." : "Fetch Projects"}
           </button>
         </form>
-
+  
         {projects.length > 0 && (
-          <div className="form-group">
+          <div className="group">
             <label htmlFor="projectId">Project</label>
             <select
               name="projectId"
@@ -196,16 +232,16 @@ const FetchProject: React.FC = () => {
                 </option>
               ))}
             </select>
-            <button type="button" onClick={handleButtonClick}>
+            <button type="button" onClick={fetchProjectDetails}>
               {loading ? "Loading..." : "Get Details"}
             </button>
           </div>
         )}
-
+  
         {error && <p className="error-message">{error}</p>}
-
+  
         {projectDetails && (
-          <div className="project-preview">
+          <div className="preview">
             <h3>Project Details</h3>
             <table>
               <tbody>
@@ -242,19 +278,13 @@ const FetchProject: React.FC = () => {
           </div>
         )}
       </div>
-
+  
+      {/* Map Section */}
       <div className="map-container">
-        {geoJsonData && (
-          <MapContainer
-            center={[51.505, -0.09]}
-            zoom={13}
-            style={{ width: "100%", height: "500px" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <GeoJSON data={geoJsonData} />
+        {projectDetails?.filePath && (
+          <MapContainer center={[0, 0]} zoom={2} className="map">
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <KMLLayer url={projectDetails.filePath} />
           </MapContainer>
         )}
       </div>

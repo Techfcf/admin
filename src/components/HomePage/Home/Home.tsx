@@ -13,75 +13,50 @@ const Home: React.FC = () => {
     navigate('/AreaOfinterest');
   };
 
-  const handleSatellite = (): void => {
-    navigate('/Satellite');
-  };
-
   const handleOrthoMosaicImage = (): void => {
     navigate('/orthomoasicimage');
   };
-  const handlecreatesector = (): void => {
+  
+  const handleprojectdescription = (): void => {
     navigate('/createsector');
   };
-  const handleCreateProject = (): void => {
-    navigate('/CreateProject');
-  };
-  const handleFetchProject = (): void => {
-    navigate('/FetchProject');
-  };
-
+  
   return (
     <>
-      <div className="sidebar">
-        <h1 className="h1">Our Services</h1>
-        <div className="box">
+      <div className="sidebar-container">
+        <h1 className="sidebar-title">Our Services</h1>
+        <div className="service-box">
           <p>
             Area of Interest feature supports GeoJSON, KML, and zipped ESRI shapefiles. Upload files to visualize regions, generate KML, and download for use in GIS or mapping platforms.
           </p>
           <button onClick={handleAreaOfInterest}>Area of Interest</button>
         </div>
-        <div className="box">
+        <div className="service-box">
           <p>
-            Satellite/Sensor Selection refers to the process of choosing the most suitable satellite or sensor based on specific project requirements.
+           In this Panel i am create the " Create-Project sector " , and  Give "Create-Project-details " ,and "Fetch Project details " retrieves and displays project details with Fetched image.
           </p>
-          <button onClick={handleSatellite}>Satellite/Sensor Selection</button>
+          <button onClick={handleprojectdescription}>Project Description Panel</button>
         </div>
-        <div className="box">
-          <p>
-            An orthomosaic image is a high-resolution, geometrically corrected map created from multiple overlapping aerial or satellite images.
-          </p>
-          <button onClick={handleOrthoMosaicImage}>Orthomosaic Image</button>
-        </div>
-        <div className="box">
+        <div className="service-box">
           <img src="public/assets/download.png" alt="Sentinel Hub Logo" />
           <p>
             Sentinel Hub is a powerful tool used for Earth Observation data. It provides easy access to satellite imagery.
           </p>
           <button onClick={Sentinel}>Sentinel</button>
         </div>
-        <div className="box">
+        
+        <div className="service-box">
           <p>
-            Create Sector" involves defining and organizing specific business or operational areas to streamline activities, improve focus, and drive growth.
+            An orthomosaic image is a high-resolution, geometrically corrected map created from multiple overlapping aerial or satellite images.
           </p>
-          <button onClick={handlecreatesector}>Create Sectors</button>
+          <button onClick={handleOrthoMosaicImage}>Orthomosaic Image</button>
         </div>
-        <div className="box">
-          <p>
-            "Create Project" involves planning, defining objectives, allocating resources, setting timelines, and executing tasks to achieve specific project goals efficiently.
-          </p>
-          <button onClick={handleCreateProject}>Create Project</button>
-        </div>
-        <div className="box">
-          <p>
-            Fetch Project retrieves and displays project details effortlessly.
-          </p>
-          <button onClick={handleFetchProject}>Fetch Project</button>
-        </div>
+        
       </div>
 
       {/* Footer Section */}
-      <footer className="footer">
-        <div className="footer-section">
+      <footer className="footer-container">
+        <div className="footer-content">
           <div className="footer-column">
             <h3>Latest News</h3>
             <ul>
