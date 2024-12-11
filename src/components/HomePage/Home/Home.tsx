@@ -61,6 +61,7 @@ const Home: React.FC = () => {
             <h3>Latest News</h3>
             <ul>
               <li>
+<<<<<<< HEAD
                 <img src="assets/r3.jpg" alt="News 1" />
                 <p>North Meets South!</p>
               </li>
@@ -70,6 +71,17 @@ const Home: React.FC = () => {
               </li>
               <li>
                 <img src="assets/hj.jpg" alt="News 3" />
+=======
+                <img src="/assets/r3.jpg" alt="News 1" />
+                <p>North Meets South!</p>
+              </li>
+              <li>
+                <img src="/assets/r2.jpg" alt="News 2" />
+                <p>Our experience with Clean Cookstove projects</p>
+              </li>
+              <li>
+                <img src="/assets/hj.jpg" alt="News 3" />
+>>>>>>> 9ed5223e2c1d62e3bd3aa54de706e05c691ac68e
                 <p>Way to Neutrality</p>
               </li>
             </ul>
@@ -91,9 +103,15 @@ const Home: React.FC = () => {
               Industrial Area, New Delhi, 110044 (India)
             </address>
             <div className="social-icons">
+<<<<<<< HEAD
               <a href=""><img src="assets/dh.png" alt="Facebook" /></a>
               <a href="https://x.com/home"><img src="assets/dhg.png" alt="Twitter" /></a>
               <a href="https://www.facebook.com/p/FCF-India-100093362305578/?_rdr"><img src="assets/download.jpeg" alt="LinkedIn" /></a>
+=======
+              <a href=""><img src="/assets/dh.png" alt="Facebook" /></a>
+              <a href="https://x.com/home"><img src="/assets/dhg.png" alt="Twitter" /></a>
+              <a href="https://www.facebook.com/p/FCF-India-100093362305578/?_rdr"><img src="/assets/download.jpeg" alt="LinkedIn" /></a>
+>>>>>>> 9ed5223e2c1d62e3bd3aa54de706e05c691ac68e
             </div>
           </div>
         </div>
