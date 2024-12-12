@@ -176,6 +176,10 @@ const FetchProject: React.FC = () => {
   const navigateHome = () => {
     navigate("/"); // Replace "/" with your homepage route if different
   };
+  // Function to navigate to the create project page
+  const navigateCreateProject = () => {
+    navigate("/CreateProject"); // Replace "/" with your homepage route if different
+  };
 
   return (
     <div className="fetchs">
@@ -183,6 +187,11 @@ const FetchProject: React.FC = () => {
       <button className="home-button" onClick={navigateHome}>
         Home
       </button>
+      {/* Button to navigate to the create project  page */}
+      <button className="create" onClick={navigateCreateProject}>
+        Go to CreateProject
+      </button>
+
   
       {/* Form Section */}
       <div className="forms">
