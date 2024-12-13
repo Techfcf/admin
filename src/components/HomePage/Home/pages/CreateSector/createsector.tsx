@@ -105,22 +105,20 @@ const CreateSectorForm: React.FC = () => {
   const navigateCreateProject = () => {
     navigate("/CreateProject");
   };
-  const navigateFetchproject = () => {
-    navigate("/FetchProject");
-  };
 
   return (
     <div className="create-sector-form">
-      <button className="button-container" onClick={navigateCreateProject}>
+      <button className="create" onClick={navigateCreateProject}>
         Go to CreateProject
-      </button>
-      <button className="Fetch-button" onClick={navigateFetchproject}>
-        Go to Fetchproject
       </button>
       <div className="create-sector-form__container">
         <h2>Create Sector</h2>
         <form onSubmit={handleSubmit}>
-          <div className="create-sector-form__group">
+          <div
+            className={`create-sector-form__group ${
+              formErrors.name ? "has-error" : ""
+            }`}
+          >
             <label htmlFor="name">Sector Name</label>
             <input
               type="text"
@@ -135,7 +133,11 @@ const CreateSectorForm: React.FC = () => {
               <p className="create-sector-form__error">{formErrors.name}</p>
             )}
           </div>
-          <div className="create-sector-form__group">
+          <div
+            className={`create-sector-form__group ${
+              formErrors.description ? "has-error" : ""
+            }`}
+          >
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -146,7 +148,9 @@ const CreateSectorForm: React.FC = () => {
               required
             />
             {formErrors.description && (
-              <p className="create-sector-form__error">{formErrors.description}</p>
+              <p className="create-sector-form__error">
+                {formErrors.description}
+              </p>
             )}
           </div>
           <button type="submit" disabled={loading}>

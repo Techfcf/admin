@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./CreateProject.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 const CreateProject: React.FC = () => {
   const [formData, setFormData] = useState<{
@@ -27,25 +28,8 @@ const CreateProject: React.FC = () => {
   const [sectors, setSectors] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [formErrors, setFormErrors] = useState<{
-    name: string;
-    projectDesc: string;
-    area: string;
-    status: string;
-    impact: string;
-    kmlFile: string;
-    sectorId: string;
-  }>({
-    name: "",
-    projectDesc: "",
-    area: "",
-    status: "",
-    impact: "",
-    kmlFile: "",
-    sectorId: "",
-  });
+  const navigate = useNavigate(); // Initialize the navigation hook
 
-  const navigate = useNavigate();
 
   // Fetch sectors from API
   useEffect(() => {
@@ -78,76 +62,34 @@ const CreateProject: React.FC = () => {
 
   // Handle input changes
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setFormErrors({ ...formErrors, [name]: "" }); // Clear error on change
   };
 
   // Handle file input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFormData({ ...formData, kmlFile: e.target.files[0] });
-      setFormErrors({ ...formErrors, kmlFile: "" }); // Clear error on file selection
     }
-  };
-
-  // Validation function
-  const validate = () => {
-    const errors: any = {};
-
-    // Name validation (must be non-empty)
-    if (!formData.name.trim()) {
-      errors.name = "Project name is required";
-    }
-
-    // Sector validation
-    if (!formData.sectorId) {
-      errors.sectorId = "Please select a sector";
-    }
-
-    // Project description validation (required)
-    if (!formData.projectDesc.trim()) {
-      errors.projectDesc = "Project description is required";
-    }
-
-    // Area validation (must be a number and greater than 0)
-    if (!formData.area || formData.area <= 0) {
-      errors.area = "Please enter a valid project area";
-    }
-
-    // Status validation (optional, but can add custom validation)
-    if (!formData.status.trim()) {
-      errors.status = "Project status is required";
-    }
-
-    // Impact validation (optional)
-    if (!formData.impact.trim()) {
-      errors.impact = "SPG impact is required";
-    }
-
-    // KML File validation (required)
-    if (!formData.kmlFile) {
-      errors.kmlFile = "Please upload a KML file";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0; // Return true if no errors
   };
 
   // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form
-    if (!validate()) {
-      return; // Don't submit if validation fails
+    if (!formData.sectorId) {
+      alert("Please select a sector.");
+      return;
     }
 
     try {
       const submissionData = new FormData();
 
+      // Append the KML file
       if (formData.kmlFile) {
         submissionData.append("file", formData.kmlFile);
       } else {
@@ -155,6 +97,7 @@ const CreateProject: React.FC = () => {
         return;
       }
 
+      // Append the project details
       const projectData = {
         name: formData.name,
         area: formData.area,
@@ -167,6 +110,7 @@ const CreateProject: React.FC = () => {
 
       submissionData.append("project", JSON.stringify(projectData));
 
+      // Send POST request
       const response = await axios.post(
         "https://backend.fitclimate.com/api/projects/create-project",
         submissionData,
@@ -177,11 +121,18 @@ const CreateProject: React.FC = () => {
         }
       );
 
+      // Success
       alert("Project created successfully!");
+      console.log("Response:", response.data);
       navigate("/FetchProject");
     } catch (err) {
-      console.error("Error:", err);
-      alert("An error occurred while submitting the project.");
+      if (axios.isAxiosError(err) && err.response) {
+        console.error("Response Error:", err.response.data);
+        alert(`Error: ${err.response.data.message || "Request failed"}`);
+      } else {
+        console.error("Error:", err);
+        alert("An unexpected error occurred.");
+      }
     }
   };
 
@@ -212,10 +163,8 @@ const CreateProject: React.FC = () => {
                 <option disabled>No sectors available</option>
               )}
             </select>
-            {formErrors.sectorId && <p className="error-message">{formErrors.sectorId}</p>}
+            {error && <p className="create-project-error-message">{error}</p>}
           </div>
-
-          {/* Project Name */}
           <div className="create-project-form-group">
             <label htmlFor="name">Project Name</label>
             <input
@@ -226,7 +175,6 @@ const CreateProject: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
             />
-            {formErrors.name && <p className="error-message">{formErrors.name}</p>}
           </div>
 
           {/* File Upload */}
@@ -240,7 +188,6 @@ const CreateProject: React.FC = () => {
               onChange={handleFileChange}
               required
             />
-            {formErrors.kmlFile && <p className="error-message">{formErrors.kmlFile}</p>}
           </div>
 
           {/* Project Description */}
@@ -254,7 +201,6 @@ const CreateProject: React.FC = () => {
               onChange={handleChange}
               required
             />
-            {formErrors.projectDesc && <p className="error-message">{formErrors.projectDesc}</p>}
           </div>
 
           {/* Project Area */}
@@ -269,7 +215,6 @@ const CreateProject: React.FC = () => {
               onChange={handleChange}
               required
             />
-            {formErrors.area && <p className="error-message">{formErrors.area}</p>}
           </div>
 
           {/* Start Date */}
@@ -295,7 +240,6 @@ const CreateProject: React.FC = () => {
               value={formData.status}
               onChange={handleChange}
             />
-            {formErrors.status && <p className="error-message">{formErrors.status}</p>}
           </div>
 
           {/* SPG Impact */}
@@ -309,7 +253,6 @@ const CreateProject: React.FC = () => {
               value={formData.impact}
               onChange={handleChange}
             />
-            {formErrors.impact && <p className="error-message">{formErrors.impact}</p>}
           </div>
 
           {/* Submit Button */}
