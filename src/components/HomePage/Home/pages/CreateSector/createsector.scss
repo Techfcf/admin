@@ -65,6 +65,7 @@ body {
       }
     }
 
+    /* Button styles */
     button {
       width: 100%; /* Button takes full width */
       padding: 10px;
@@ -94,7 +95,7 @@ body {
       max-width: 90%; /* Adjust maximum width */
       top: -30px; /* Adjust top offset */
       left: -40px; /* Adjust left offset */
-      
+
       h2 {
         font-size: 1.2rem;
       }
@@ -123,7 +124,7 @@ body {
       max-width: 100%; /* No maximum width */
       top: -10px; /* Adjust top offset */
       left: -10px; /* Adjust left offset */
-      
+
       h2 {
         font-size: 1.1rem;
       }
@@ -145,4 +146,46 @@ body {
       }
     }
   }
+}
+
+.button-container,
+.Fetch-button {
+  padding: 8px 12px;
+  background-color: #88887f;
+  color: white;
+  border: none;
+  flex-direction: row;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  position:relative;
+  top: -60px;
+
+  &:hover {
+    background-color: #92918d;
+  }
+
+  @media (max-width: 768px) {
+    position: static; /* Remove absolute positioning */
+    width: 100%; /* Full width for stacked buttons */
+    margin-bottom: 10px; /* Add space between buttons */
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    position: static; /* Remove absolute positioning */
+    width: 100%; /* Full width for stacked buttons */
+    margin-bottom: 8px; /* Add space between buttons */
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
+/* Wrap buttons in a container to manage stacking */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center align buttons horizontally */
+  gap: 10px; /* Add consistent spacing between buttons */
 }

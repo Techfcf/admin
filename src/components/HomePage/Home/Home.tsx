@@ -33,7 +33,7 @@ const Home: React.FC = () => {
         </div>
         <div className="service-box">
           <p>
-           In this Panel i am create the " Create-Project sector " , and  Give "Create-Project-details " ,and "Fetch Project details " retrieves and displays project details with Fetched image.
+           In this Panel we are create the " Create-Project sector " , and  Give "Create-Project-details " ,and "Fetch Project details " retrieves and displays project details with Fetched image.
           </p>
           <button onClick={handleprojectdescription}>Project Description Panel</button>
         </div>
