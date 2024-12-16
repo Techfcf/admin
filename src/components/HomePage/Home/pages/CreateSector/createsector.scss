@@ -157,3 +157,49 @@ body {
     }
   }
 }
+.fetch, .creats {
+  width: 12%; /* Button takes full width */
+  padding: 10px;
+  font-size: 1rem;
+  position: relative;
+  top: -70px;
+  background-color: #e6db7c00;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fetch:hover, .creats:hover {
+  background-color: #b8c2b4d7;
+}
+
+.fetch {
+  left: 77px;
+}
+
+.creats {
+  left: 70px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .fetch, .creats {
+    width: 40%; /* Adjust button width on smaller screens */
+    top: -50px; /* Adjust top position */
+    left: 30%; /* Center the buttons */
+    font-size: 0.9rem; /* Slightly smaller font size */
+    padding: 8px; /* Smaller padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .fetch, .creats {
+    width: 80%; /* Almost full width for very small screens */
+    top: -40px; /* Further adjustment for small screens */
+    left: 10%; /* Center buttons even more */
+    font-size: 1rem; /* Adjust font size for readability */
+    padding: 12px; /* Larger padding for touch targets */
+  }
+}

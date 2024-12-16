@@ -105,11 +105,17 @@ const CreateSectorForm: React.FC = () => {
   const navigateCreateProject = () => {
     navigate("/CreateProject");
   };
+  const navigatefetchproject = () => {
+    navigate("/FetchProject");
+  };
 
   return (
     <div className="create-sector-form">
-      <button className="create" onClick={navigateCreateProject}>
+      <button className="creats" onClick={navigateCreateProject}>
         Go to CreateProject
+      </button>
+      <button className="fetch" onClick={navigatefetchproject}>
+        Go to FetchProject
       </button>
       <div className="create-sector-form__container">
         <h2>Create Sector</h2>
