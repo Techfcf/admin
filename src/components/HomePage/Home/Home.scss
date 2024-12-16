@@ -94,6 +94,9 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   box-sizing: border-box;
+  width: 100%;
+  margin-left:0;
+
 
   .footer-content {
     width:90%;
@@ -105,13 +108,13 @@ body {
 
   .footer-column {
     flex: 1;
-    min-width:200px;
-    margin: 10px;
+    min-width:100px;
+    margin: 15px;
 
     h3 {
       border-bottom: 2px solid #4caf50;
-      padding-bottom: 5px;
-      margin-bottom: 15px;
+      padding-bottom: 5%;
+      margin-bottom: 10px;
       font-size: 1.2rem;
     }
 
@@ -231,6 +234,8 @@ body {
 @media (max-width: 1024px) {
   .footer-container {
     padding:10px;
+    margin-left: 6px;
+    margin-bottom: -280px;
   }
 
   .footer-content {
